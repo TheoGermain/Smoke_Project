@@ -12,6 +12,8 @@ public :
   void set_revetement(NSRevetement::Revetement r);
   void set_en_feu(bool b);
   bool get_en_feu() const;
+  void set_fire(int n){degre_de_feu = n;}
+  int get_fire(){return degre_de_feu;}
   NSRevetement::Revetement get_revetement() const;
 
   static std::map<NSRevetement::Revetement, int> map_coeff_propagation;

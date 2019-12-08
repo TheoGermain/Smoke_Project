@@ -2,6 +2,7 @@
 #include <vector>
 #include "Grille.hh"
 #include "Civil.hh"
+#include "Recipient.hh"
 using namespace NSRevetement;
 
 std::ostream& operator<<(std::ostream& out, const NSRevetement::Revetement& r){
@@ -46,4 +47,11 @@ int main(){
   std::cout<<b.deplacer(26,19)<<std::endl;
   std::vector<int> temp2 = b.get_pos();
   std::cout<<temp2[0]<<","<<temp2[1]<<std::endl;
+
+    std::cout<<"test Recipient"<<std::endl;
+    Recipient r = Recipient(5);
+    r.arroser(test(4,2));
+    std::cout << test << std::endl << Grille::cases_en_feu.size() << std::endl;
+    r.arroser(test(4,2));//La fonction cases_en_feu ne met pas à jours cases_en_feu
+    std::cout << test << std::endl << Grille::cases_en_feu.size() << std::endl;
 }

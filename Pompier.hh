@@ -4,7 +4,7 @@ class Pompier : public Civil{
 
 public :
   Pompier();
-  ~Pompier();
+  ~Pompier()
 
 protected :
   recipient _recip;
