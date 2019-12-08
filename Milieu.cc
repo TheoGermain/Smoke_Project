@@ -18,7 +18,6 @@ Milieu::~Milieu(){
 
 }
 
-
 void Milieu::set_revetement(NSRevetement::Revetement r){
   this->r = r;
   if(r == NSRevetement::eau || r == NSRevetement::brule)

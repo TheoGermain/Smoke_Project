@@ -16,9 +16,14 @@ public :
   friend std::ostream& operator<<(std::ostream& out, const Grille& g);
   void propagation();
   static std::vector<int*> cases_en_feu;
+  void turn_on_fire(int L, int C);
 
 private :
   void propagation_feu(int, std::size_t, std::size_t);
   bool declaration_feu(std::size_t, std::size_t);
+  void propagation_feu_ligne(int, std::size_t, std::size_t);
+  void propagation_feu_colonne(int, std::size_t , std::size_t);
+  void propagation_feu_diagonaleGD(int, std::size_t, std::size_t);
+  void propagation_feu_diagonaleDG(int, std::size_t, std::size_t);
   Milieu **plateau;
 };
