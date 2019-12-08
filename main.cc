@@ -24,16 +24,22 @@ std::ostream& operator<<(std::ostream& out, const NSRevetement::Revetement& r){
   }
 }
 
+
 int main(){
   srand (time (NULL));
   Grille test;
-  std::cout << test << std::endl;
-  test(4,2).set_revetement(NSRevetement::foret);
-  test(4,2).set_en_feu(true);
-  int t[2] = {4,2};
-  Grille::cases_en_feu.push_back(t);
-  std::cout << std::endl << Grille::cases_en_feu[0][0] << ',' << Grille::cases_en_feu[0][1] << std::endl;
+  //std::cout << test << std::endl;
+  //test(4,2).set_revetement(NSRevetement::foret);
+  test.turn_on_fire(4,2);
+
   std::cout << test << std::endl << Grille::cases_en_feu.size() << std::endl;
+  test.propagation();
+  std::cout << test << std::endl << Grille::cases_en_feu.size() << std::endl;
+  test.propagation();
+  std::cout << test << std::endl << Grille::cases_en_feu.size() << std::endl;
+  test.propagation();
+  test.propagation();
+  test.propagation();
   test.propagation();
   std::cout << test << std::endl << Grille::cases_en_feu.size() << std::endl;
 
