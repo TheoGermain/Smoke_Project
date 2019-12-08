@@ -2,7 +2,7 @@
 
 std::map<NSRevetement::Revetement, int> Milieu::map_coeff_propagation = {{NSRevetement::foret,2} , {NSRevetement::plaine,3}, {NSRevetement::eau,0}, {NSRevetement::ville,1}, {NSRevetement::usine,5}, {NSRevetement::brule,0}};
 std::map<NSRevetement::Revetement, int> Milieu::map_proba_feu = {{NSRevetement::foret,3} , {NSRevetement::plaine,4}, {NSRevetement::eau,0}, {NSRevetement::ville,5}, {NSRevetement::usine,1}, {NSRevetement::brule,0}};
-
+//sert dans Grille::declaration_feu
 
 Milieu::Milieu(){
   r = NSRevetement::foret;

@@ -56,7 +56,7 @@ bool Grille::declaration_feu(std::size_t i, std::size_t j){
   int proba_declaration = Milieu::map_proba_feu[(*this)(i,j).get_revetement()];
   if(!proba_declaration)
     return false;
-  if(!(rand() % proba_declaration))
+  if(!(rand() % proba_declaration)) // 1 chance /proba_declaration que ça soit true
     return true;
   return false;
 }
