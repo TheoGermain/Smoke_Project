@@ -26,30 +26,32 @@ std::ostream& operator<<(std::ostream& out, const NSRevetement::Revetement& r){
 
 int main(){
   srand (time (NULL));
-  Grille test;
-  //std::cout << test << std::endl;
-  //test(4,2).set_revetement(NSRevetement::foret);
-  test.turn_on_fire(4,2);
-
-  std::cout << test << std::endl << Grille::cases_en_feu.size() << std::endl;
-  test.propagation();
-  std::cout << test << std::endl << Grille::cases_en_feu.size() << std::endl;
-  test.propagation();
-  std::cout << test << std::endl << Grille::cases_en_feu.size() << std::endl;
-  test.propagation();
-  test.propagation();
-  test.propagation();
-  test.propagation();
-  std::cout << test << std::endl << Grille::cases_en_feu.size() << std::endl;
+  // Grille test;
+  // //std::cout << test << std::endl;
+  // //test(4,2).set_revetement(NSRevetement::foret);
+  // test.turn_on_fire(4,2);
+  //
+  // std::cout << test << std::endl << Grille::cases_en_feu.size() << std::endl;
+  // test.propagation();
+  // std::cout << test << std::endl << Grille::cases_en_feu.size() << std::endl;
+  // test.propagation();
+  // std::cout << test << std::endl << Grille::cases_en_feu.size() << std::endl;
+  // // test.propagation();
+  // // test.propagation();
+  // // test.propagation();
+  // // test.propagation();
+  // test.turn_off_fire(4,2);
+  // std::cout << test << std::endl << Grille::cases_en_feu.size() << std::endl;
 
   std::cout<<"test Civil"<<std::endl;
   Civil a;
   std::vector<int> temp = a.get_pos();
-  std::cout<<temp[0]<<","<<temp[1]<<std::endl;
+  //std::cout << temp[0] << "," << temp[1] << std::endl;
+  std::cout << a << std::endl;
   Civil b = Civil(100,4,2,2);
+  std::cout << b << std::endl;
   std::cout<<b.deplacer(3,3)<<std::endl;
   std::cout<<b.deplacer(5,9)<<std::endl;
   std::cout<<b.deplacer(26,19)<<std::endl;
-  std::vector<int> temp2 = b.get_pos();
-  std::cout<<temp2[0]<<","<<temp2[1]<<std::endl;
+  std::cout << b << std::endl;
 }

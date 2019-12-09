@@ -69,6 +69,17 @@ void Grille::turn_on_fire(int L, int C){
   Grille::cases_en_feu.push_back(tmp);
 }
 
+void Grille::turn_off_fire(int L, int C){
+  (*this)(L,C).set_en_feu(false);
+  (*this)(L,C).set_revetement(NSRevetement::brule);
+  for(auto it = Grille::cases_en_feu.begin(); it != Grille::cases_en_feu.end(); it++){
+    if(((*it)[0] == L) && ((*it)[1] == C)){
+      Grille::cases_en_feu.erase(it);
+      break;
+    }
+  }
+}
+
 void Grille::propagation_feu_ligne(int coeff_propagation, std::size_t L, std::size_t C){
   int min = C - coeff_propagation;
   int max = C + coeff_propagation;

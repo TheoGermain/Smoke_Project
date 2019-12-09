@@ -17,6 +17,7 @@ public :
   void propagation();
   static std::vector<int*> cases_en_feu;
   void turn_on_fire(int L, int C);
+  void turn_off_fire(int L, int C);
 
 private :
   void propagation_feu(int, std::size_t, std::size_t);
