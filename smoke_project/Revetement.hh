@@ -1,4 +1,0 @@
-#ifndef REVETEMENT_HH
-#define REVETEMENT_HH
-
-#endif // REVETEMENT_HH
