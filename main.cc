@@ -57,10 +57,10 @@ int main(){
   std::cout << b << std::endl;
   std::vector<int> temp2 = b.get_pos();
 
-    std::cout<<"test Recipient"<<std::endl;
-    Recipient r = Recipient(5);
-    r.arroser(test(4,2));
-    std::cout << test << std::endl << Grille::cases_en_feu.size() << std::endl;
-    r.arroser(test(4,2));//La fonction cases_en_feu ne met pas à jours cases_en_feu
-    std::cout << test << std::endl << Grille::cases_en_feu.size() << std::endl;
+  std::cout<<"test Recipient"<<std::endl;
+  Recipient r = Recipient(5);
+  r.arroser(test(4,2));
+  std::cout << test << std::endl << Grille::cases_en_feu.size() << std::endl;
+  r.arroser(test(4,2));         //La fonction cases_en_feu ne met pas à jours cases_en_feu
+  std::cout << test << std::endl << Grille::cases_en_feu.size() << std::endl;
 }
