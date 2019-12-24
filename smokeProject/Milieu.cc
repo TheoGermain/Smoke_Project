@@ -26,6 +26,10 @@ void Milieu::set_revetement(NSRevetement::Revetement r){
     set_degre_de_feu();
 }
 
+NSRevetement::Revetement Milieu::get_revetement(void){
+    return this->r;
+}
+
 void Milieu::set_en_feu(bool b){
   if(this->r != NSRevetement::eau && this->r != NSRevetement::brule){
     this->en_feu = b;

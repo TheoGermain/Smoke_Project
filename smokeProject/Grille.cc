@@ -1,24 +1,38 @@
 #include "Grille.hh"
-#include <time.h>
-#include <iostream>
-#include <QApplication>
-#include <fstream>
 
 std::vector<int*> Grille::cases_en_feu;
 
-Grille::Grille(){
+Grille::Grille() : _imgFeu(L_GRILLE, std::vector<ClickableLabel*>()){
   int pos_l = 0;
   int pos_c = 0;
   std::string path = QApplication::applicationDirPath().toUtf8().constData();
+  setFixedSize(1400, 820);
+
+  _start = new QPushButton("START", this);
+  _start->move(this->frameSize().width()/2 - _start->frameSize().width()/2, 780);
+
+  _nextTurn = new QPushButton("Tour Suivant", this);
+  _nextTurn->move(this->frameSize().width()/2 - _start->frameSize().width()/2, 780);
+  _nextTurn->setVisible(false);
 
   plateau = new Milieu*[L_GRILLE];
   for(std::size_t j = 0; j < L_GRILLE; j++)
     plateau[j] = new Milieu[C_GRILLE];
 
-  setFixedSize(1400, 770);
   _map = new ClickableLabel(this);
   _map->setPixmap(QPixmap(QApplication::applicationDirPath() + "/../../../map1.png"));
   std::ifstream mapDescriptor(path + "/../../../mapDescriptor.txt");
+
+  for(int j = 0; j < L_GRILLE; j++){
+      for(int k = 0; k < C_GRILLE; k++){
+          ClickableLabel *imgFeu = new ClickableLabel(this);
+          imgFeu->setPixmap(QPixmap(QApplication::applicationDirPath() + "/../../../feu.png"));
+          imgFeu->setGeometry(k*35, j*35, 35, 35);
+          imgFeu->setVisible(false);
+          _imgFeu[j].push_back(imgFeu);
+          QObject::connect(imgFeu, SIGNAL(clickedFeu(int, int)), this, SLOT(boxClicked(int, int)));
+      }
+  }
 
   while(!mapDescriptor.eof()){
     int i;
@@ -59,7 +73,10 @@ Grille::Grille(){
         pos_l++;
     }
   }
+
   QObject::connect(_map, SIGNAL(clicked(int, int)), this, SLOT(boxClicked(int, int)));
+  QObject::connect(_start, SIGNAL(clicked()), this, SLOT(gameStart()));
+  QObject::connect(_nextTurn, SIGNAL(clicked()), this, SLOT(propagation()));
 }
 
 Grille::~Grille(){
@@ -119,6 +136,7 @@ void Grille::turn_on_fire(int L, int C){
   tmp[0] = L;
   tmp[1] = C;
   Grille::cases_en_feu.push_back(tmp);
+  _imgFeu[L][C]->setVisible(true);
 }
 
 void Grille::turn_off_fire(int L, int C){
@@ -223,4 +241,18 @@ void Grille::propagation_feu_diagonaleDG(int coeff_propagation, std::size_t L, s
 
 void Grille::boxClicked(int L, int C){
     std::cout << '(' << L << ',' << C << ',' << (*this)(L,C) << ')' << std::endl;
+}
+
+void Grille::gameStart(){
+    _start->setVisible(false);
+    _nextTurn->setVisible(true);
+
+    while(Grille::cases_en_feu.size() != DEPART_FEU_START){
+        int x_alea = rand() % 40;
+        int y_alea = rand() % 10;
+        if(plateau[y_alea][x_alea].get_revetement() == NSRevetement::eau || plateau[y_alea][x_alea].get_en_feu())
+            continue;
+        turn_on_fire(y_alea, x_alea);
+        std::cout << '(' << y_alea << ',' << x_alea << ')' << (*this)(y_alea, x_alea) << std::endl; // /////
+    }
 }

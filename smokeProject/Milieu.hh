@@ -10,6 +10,7 @@ public :
   virtual ~Milieu();
   friend std::ostream& operator<<(std::ostream& out, const Milieu& m);
   void set_revetement(NSRevetement::Revetement r);
+  NSRevetement::Revetement get_revetement(void);
   void set_en_feu(bool b);
   bool get_en_feu() const;
   void set_fire(int n){degre_de_feu = n;}

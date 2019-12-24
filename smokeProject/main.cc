@@ -3,7 +3,7 @@
 
 using namespace NSRevetement;
 
-std::ostream& operator<<(std::ostream& out, const NSRevetement::Revetement& r){
+std::ostream& operator<<(std::ostream& out, const Revetement& r){
   switch (r){
     case foret:
       return out << "foret";
@@ -26,7 +26,7 @@ int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
     Grille g;
-    g.show();
+    g.showFullScreen();
 
     return app.exec();
 }
