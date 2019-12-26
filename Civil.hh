@@ -12,7 +12,7 @@ class Civil{
 
 public :
   Civil();
-  Civil(int pv, int pm,int x, int y);
+  Civil(int pv, int pm, int x, int y);
   virtual ~Civil();
   friend std::ostream& operator<<(std::ostream& out, const Civil& c);
   int deplacer(int x, int y);
@@ -22,5 +22,5 @@ protected :
   std::string _name;
   int _pdv;
   int _pdm;
-  std::vector<int> _pos;                           // format x,y
+  std::vector<int> _pos;
 };

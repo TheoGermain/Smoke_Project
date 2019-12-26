@@ -2,7 +2,6 @@
 
 std::map<NSRevetement::Revetement, int> Milieu::map_coeff_propagation = {{NSRevetement::foret,2} , {NSRevetement::plaine,3}, {NSRevetement::eau,0}, {NSRevetement::ville,1}, {NSRevetement::usine,5}, {NSRevetement::brule,0}};
 std::map<NSRevetement::Revetement, int> Milieu::map_proba_feu = {{NSRevetement::foret,3} , {NSRevetement::plaine,4}, {NSRevetement::eau,0}, {NSRevetement::ville,5}, {NSRevetement::usine,1}, {NSRevetement::brule,0}};
-//sert dans Grille::declaration_feu
 
 Milieu::Milieu(){
   r = NSRevetement::foret;
@@ -79,3 +78,17 @@ void Milieu::set_degre_de_feu(){
     }
   }
 }
+
+void Milieu::ajouterCivil(Civil* c){
+    personnages.push_back(c);
+}
+
+void Milieu::supprimerCivil(const Civil* c){
+    std::vector<Civil*>::iterator to_erase;
+    for(auto it = personnages.begin(); it != personnages.end(); it++){
+        if(!(*it)->get_name().compare(c->get_name()))
+            to_erase = it;
+    }
+    personnages.erase(to_erase);
+}
+

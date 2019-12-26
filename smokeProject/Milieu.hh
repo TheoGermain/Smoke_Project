@@ -2,6 +2,7 @@
 #include "Revetement.hh"
 #include <vector>
 #include <iostream>
+#include "Civil.hh"
 
 class Milieu{
 public :
@@ -16,6 +17,8 @@ public :
   void set_fire(int n){degre_de_feu = n;}
   int get_fire(){return degre_de_feu;}
   NSRevetement::Revetement get_revetement() const;
+  void ajouterCivil(Civil*);
+  void supprimerCivil(const Civil*);
 
   static std::map<NSRevetement::Revetement, int> map_coeff_propagation;
   static std::map<NSRevetement::Revetement, int> map_proba_feu;
@@ -23,7 +26,7 @@ public :
 private :
   NSRevetement::Revetement r;
   bool en_feu;
-  //std::vector<Civil> personnages;
+  std::vector<Civil*> personnages;
   int degre_de_feu;
   void set_degre_de_feu();
 };

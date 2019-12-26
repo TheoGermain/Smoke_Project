@@ -34,10 +34,10 @@ static const qt_meta_stringdata_ClickableLabel_t qt_meta_stringdata_ClickableLab
 QT_MOC_LITERAL(0, 0, 14), // "ClickableLabel"
 QT_MOC_LITERAL(1, 15, 7), // "clicked"
 QT_MOC_LITERAL(2, 23, 0), // ""
-QT_MOC_LITERAL(3, 24, 10) // "clickedFeu"
+QT_MOC_LITERAL(3, 24, 10) // "clickedImg"
 
     },
-    "ClickableLabel\0clicked\0\0clickedFeu"
+    "ClickableLabel\0clicked\0\0clickedImg"
 };
 #undef QT_MOC_LITERAL
 
@@ -72,7 +72,7 @@ void ClickableLabel::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _
         Q_UNUSED(_t)
         switch (_id) {
         case 0: _t->clicked((*reinterpret_cast< int(*)>(_a[1])),(*reinterpret_cast< int(*)>(_a[2]))); break;
-        case 1: _t->clickedFeu((*reinterpret_cast< int(*)>(_a[1])),(*reinterpret_cast< int(*)>(_a[2]))); break;
+        case 1: _t->clickedImg((*reinterpret_cast< int(*)>(_a[1])),(*reinterpret_cast< int(*)>(_a[2]))); break;
         default: ;
         }
     } else if (_c == QMetaObject::IndexOfMethod) {
@@ -86,7 +86,7 @@ void ClickableLabel::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _
         }
         {
             using _t = void (ClickableLabel::*)(int , int );
-            if (*reinterpret_cast<_t *>(_a[1]) == static_cast<_t>(&ClickableLabel::clickedFeu)) {
+            if (*reinterpret_cast<_t *>(_a[1]) == static_cast<_t>(&ClickableLabel::clickedImg)) {
                 *result = 1;
                 return;
             }
@@ -142,7 +142,7 @@ void ClickableLabel::clicked(int _t1, int _t2)
 }
 
 // SIGNAL 1
-void ClickableLabel::clickedFeu(int _t1, int _t2)
+void ClickableLabel::clickedImg(int _t1, int _t2)
 {
     void *_a[] = { nullptr, const_cast<void*>(reinterpret_cast<const void*>(&_t1)), const_cast<void*>(reinterpret_cast<const void*>(&_t2)) };
     QMetaObject::activate(this, &staticMetaObject, 1, _a);

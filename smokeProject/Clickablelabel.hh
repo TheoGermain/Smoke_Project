@@ -14,7 +14,7 @@ public:
 
 signals:
     void clicked(int, int);
-    void clickedFeu(int, int);
+    void clickedImg(int, int);
 
 protected:
     void mousePressEvent(QMouseEvent* event);

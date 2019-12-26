@@ -11,5 +11,5 @@ void ClickableLabel::mousePressEvent(QMouseEvent* event) {
     int mx = event->x()/35;
     int my = event->y()/35;
     emit clicked(my, mx);
-    emit clickedFeu(this->y()/35, this->x()/35);
+    emit clickedImg(this->y()/35, this->x()/35);
 }

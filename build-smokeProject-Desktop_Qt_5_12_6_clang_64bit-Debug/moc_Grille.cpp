@@ -37,11 +37,11 @@ QT_MOC_LITERAL(2, 18, 0), // ""
 QT_MOC_LITERAL(3, 19, 1), // "L"
 QT_MOC_LITERAL(4, 21, 1), // "C"
 QT_MOC_LITERAL(5, 23, 9), // "gameStart"
-QT_MOC_LITERAL(6, 33, 11) // "propagation"
+QT_MOC_LITERAL(6, 33, 11) // "tourSuivant"
 
     },
     "Grille\0boxClicked\0\0L\0C\0gameStart\0"
-    "propagation"
+    "tourSuivant"
 };
 #undef QT_MOC_LITERAL
 
@@ -79,7 +79,7 @@ void Grille::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void
         switch (_id) {
         case 0: _t->boxClicked((*reinterpret_cast< int(*)>(_a[1])),(*reinterpret_cast< int(*)>(_a[2]))); break;
         case 1: _t->gameStart(); break;
-        case 2: _t->propagation(); break;
+        case 2: _t->tourSuivant(); break;
         default: ;
         }
     }
