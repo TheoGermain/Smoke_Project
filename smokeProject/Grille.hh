@@ -6,7 +6,9 @@
 #include <QApplication>
 #include <fstream>
 #include <QPushButton>
+#include <sstream>
 #include "Clickablelabel.hh"
+#include "BoxDisplayInfo.hh"
 
 #define L_GRILLE 22
 #define C_GRILLE 40
@@ -30,9 +32,12 @@ public :
 
 
 public slots :
-  void boxClicked(int L, int C);
+  void boxClicked(int, int);
   void gameStart();
   void tourSuivant();
+
+signals:
+  void displayInfo();
 
 private :
   void propagation_feu(int, std::size_t, std::size_t);
@@ -52,4 +57,6 @@ private :
   QPushButton *_start;
   QPushButton *_nextTurn;
   QLabel *_nbCivil;
+  QLabel *_nbFeu;
+  BoxDisplayInfo *_fenetreInfoCase;
 };

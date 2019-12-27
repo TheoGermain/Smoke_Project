@@ -83,6 +83,11 @@ std::string Civil::get_name() const{
     return _name;
 }
 
+std::string Civil::toString(void){
+    std::stringstream ss;
+    ss << _name << "   " << "PV : " << _pdv << "   " << "PM " << _pdm;
+    return ss.str();
+}
 
 /*int Civil::deplacer(int x, int y){
     if()

@@ -29,6 +29,11 @@ NSRevetement::Revetement Milieu::get_revetement(void){
     return this->r;
 }
 
+std::vector<Civil*> Milieu::get_personnages(void){
+    return personnages;
+}
+
+
 void Milieu::set_en_feu(bool b){
   if(this->r != NSRevetement::eau && this->r != NSRevetement::brule){
     this->en_feu = b;

@@ -105,10 +105,25 @@ Grille::Grille() : _imgFeu(L_GRILLE, std::vector<ClickableLabel*>()), _civilList
   logoCivil->move(1000, 777);
   _nbCivil->setVisible(false);
 
+  // Affichage nombre de cases en feu
+  QLabel *logoFeu = new QLabel(this);
+  _nbFeu = new QLabel(this);
+  _nbFeu->setFixedSize(100, _nbFeu->height());
+  _nbFeu->setFont(font);
+  logoFeu->setPixmap(QApplication::applicationDirPath() + "/../../../feu.png");
+  _nbFeu->move(1150, 780);
+  logoFeu->move(1100, 777);
+  _nbFeu->setVisible(false);
+
+  // Fenetre pour l'affichage des informations d'une case
+  _fenetreInfoCase = new BoxDisplayInfo;
+  _fenetreInfoCase->setFixedSize(200, 300);
+
   // Connexion des signaux et slots
   QObject::connect(_map, SIGNAL(clicked(int, int)), this, SLOT(boxClicked(int, int)));
   QObject::connect(_start, SIGNAL(clicked()), this, SLOT(gameStart()));
   QObject::connect(_nextTurn, SIGNAL(clicked()), this, SLOT(tourSuivant()));
+  QObject::connect(this, SIGNAL(displayInfo()), _fenetreInfoCase, SLOT(show()));
 }
 
 Grille::~Grille(){
@@ -264,7 +279,7 @@ void Grille::propagation_feu_diagonaleDG(int coeff_propagation, std::size_t L, s
       continue;
     }
     if(declaration_feu(min_L, min_C))
-      turn_on_fire(min_L,min_C);
+      turn_on_fire(min_L, min_C);
 
     min_L++;
     min_C--;
@@ -273,6 +288,38 @@ void Grille::propagation_feu_diagonaleDG(int coeff_propagation, std::size_t L, s
 
 void Grille::boxClicked(int L, int C){
     std::cout << '(' << L << ',' << C << ',' << (*this)(L,C) << ')' << std::endl;
+
+    if((L < L_GRILLE/2) && (C < C_GRILLE/2))
+        _fenetreInfoCase->move((C + 1)*35, L*35);
+    else if((L < L_GRILLE/2) && (C >= C_GRILLE/2))
+        _fenetreInfoCase->move((C - 1)*35 - _fenetreInfoCase->width(), L*35);
+    else if((L >= L_GRILLE/2) && (C < C_GRILLE/2))
+        _fenetreInfoCase->move((C + 1)*35, L*35 - _fenetreInfoCase->height());
+    else if((L >= L_GRILLE/2) && (C >= C_GRILLE/2))
+        _fenetreInfoCase->move((C - 1)*35 - _fenetreInfoCase->width(), L*35 - _fenetreInfoCase->height());
+
+    std::stringstream ss;
+    ss << "CASE " << '(' << std::to_string(L) << ',' << std::to_string(C) << ')';
+    _fenetreInfoCase->set_coordCase(ss.str());
+    ss.clear();
+    ss.str(std::string());
+    ss << plateau[L][C].get_revetement();
+    _fenetreInfoCase->set_revCase(ss.str());
+    ss.clear();
+    ss.str(std::string());
+    ss << "En feu : " << plateau[L][C].get_en_feu();
+    _fenetreInfoCase->set_statusCase(ss.str());
+    ss.clear();
+    ss.str(std::string());
+    ss << "Intensité du feu : " << std::to_string( plateau[L][C].get_fire());
+    _fenetreInfoCase->set_intensiteFeuCase(ss.str());
+    _fenetreInfoCase->clear();
+    std::vector<Civil*> v = plateau[L][C].get_personnages();
+
+    for(auto it = v.begin(); it != v.end(); it++){
+        _fenetreInfoCase->addItem((*it)->toString());
+    }
+    emit displayInfo();
 }
 
 void Grille::gameStart(){
@@ -287,8 +334,9 @@ void Grille::gameStart(){
         if(plateau[y_alea][x_alea].get_revetement() == NSRevetement::eau || plateau[y_alea][x_alea].get_en_feu())
             continue;
         turn_on_fire(y_alea, x_alea);
-        //std::cout << '(' << y_alea << ',' << x_alea << ')' << (*this)(y_alea, x_alea) << std::endl; // /////
     }
+    _nbFeu->setText(QString::fromStdString(std::to_string(cases_en_feu.size())));
+    _nbFeu->setVisible(true);
 
     // Initialisation des civils
     for(auto it = _civilList.begin(); it != _civilList.end(); it++){
@@ -310,8 +358,8 @@ void Grille::tourSuivant(){
     baisse_pdv();
     if(nbCivilMort != DEPART_CIVIL)
         deplacement_personnages();
+    _nbFeu->setText(QString::fromStdString(std::to_string(cases_en_feu.size())));
 }
-
 
 
 void Grille::deplacement_personnages(void){

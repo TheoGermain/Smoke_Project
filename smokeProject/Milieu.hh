@@ -16,6 +16,7 @@ public :
   bool get_en_feu() const;
   void set_fire(int n){degre_de_feu = n;}
   int get_fire(){return degre_de_feu;}
+  std::vector<Civil*> get_personnages(void);
   NSRevetement::Revetement get_revetement() const;
   void ajouterCivil(Civil*);
   void supprimerCivil(const Civil*);

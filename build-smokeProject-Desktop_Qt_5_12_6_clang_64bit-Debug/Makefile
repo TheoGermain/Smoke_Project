@@ -52,13 +52,15 @@ OBJECTS_DIR   = ./
 
 ####### Files
 
-SOURCES       = ../smokeProject/Civil.cc \
+SOURCES       = ../smokeProject/BoxDisplayInfo.cc \
+		../smokeProject/Civil.cc \
 		../smokeProject/Clickablelabel.cc \
 		../smokeProject/Grille.cc \
 		../smokeProject/Milieu.cc \
 		../smokeProject/main.cc moc_Clickablelabel.cpp \
 		moc_Grille.cpp
-OBJECTS       = Civil.o \
+OBJECTS       = BoxDisplayInfo.o \
+		Civil.o \
 		Clickablelabel.o \
 		Grille.o \
 		Milieu.o \
@@ -237,11 +239,13 @@ DIST          = /Users/theo/Qt/5.12.6/clang_64/mkspecs/features/spec_pre.prf \
 		/Users/theo/Qt/5.12.6/clang_64/mkspecs/features/exceptions.prf \
 		/Users/theo/Qt/5.12.6/clang_64/mkspecs/features/yacc.prf \
 		/Users/theo/Qt/5.12.6/clang_64/mkspecs/features/lex.prf \
-		../smokeProject/smokeProject.pro ../smokeProject/Civil.hh \
+		../smokeProject/smokeProject.pro ../smokeProject/BoxDisplayInfo.hh \
+		../smokeProject/Civil.hh \
 		../smokeProject/Clickablelabel.hh \
 		../smokeProject/Grille.hh \
 		../smokeProject/Milieu.hh \
-		../smokeProject/Revetement.hh ../smokeProject/Civil.cc \
+		../smokeProject/Revetement.hh ../smokeProject/BoxDisplayInfo.cc \
+		../smokeProject/Civil.cc \
 		../smokeProject/Clickablelabel.cc \
 		../smokeProject/Grille.cc \
 		../smokeProject/Milieu.cc \
@@ -651,8 +655,8 @@ distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents /Users/theo/Qt/5.12.6/clang_64/mkspecs/features/data/dummy.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents ../smokeProject/Civil.hh ../smokeProject/Clickablelabel.hh ../smokeProject/Grille.hh ../smokeProject/Milieu.hh ../smokeProject/Revetement.hh $(DISTDIR)/
-	$(COPY_FILE) --parents ../smokeProject/Civil.cc ../smokeProject/Clickablelabel.cc ../smokeProject/Grille.cc ../smokeProject/Milieu.cc ../smokeProject/main.cc $(DISTDIR)/
+	$(COPY_FILE) --parents ../smokeProject/BoxDisplayInfo.hh ../smokeProject/Civil.hh ../smokeProject/Clickablelabel.hh ../smokeProject/Grille.hh ../smokeProject/Milieu.hh ../smokeProject/Revetement.hh $(DISTDIR)/
+	$(COPY_FILE) --parents ../smokeProject/BoxDisplayInfo.cc ../smokeProject/Civil.cc ../smokeProject/Clickablelabel.cc ../smokeProject/Grille.cc ../smokeProject/Milieu.cc ../smokeProject/main.cc $(DISTDIR)/
 
 
 clean: compiler_clean 
@@ -707,15 +711,12 @@ moc_Grille.cpp: ../smokeProject/Grille.hh \
 		../smokeProject/Milieu.hh \
 		../smokeProject/Revetement.hh \
 		../smokeProject/Civil.hh \
-		../smokeProject/Grille.hh \
 		/Users/theo/Qt/5.12.6/clang_64/lib/QtWidgets.framework/Headers/QWidget \
 		/Users/theo/Qt/5.12.6/clang_64/lib/QtWidgets.framework/Headers/qwidget.h \
 		/Users/theo/Qt/5.12.6/clang_64/lib/QtWidgets.framework/Headers/QApplication \
 		/Users/theo/Qt/5.12.6/clang_64/lib/QtWidgets.framework/Headers/qapplication.h \
 		/Users/theo/Qt/5.12.6/clang_64/lib/QtWidgets.framework/Headers/QPushButton \
 		/Users/theo/Qt/5.12.6/clang_64/lib/QtWidgets.framework/Headers/qpushbutton.h \
-		/Users/theo/Qt/5.12.6/clang_64/lib/QtWidgets.framework/Headers/QBoxLayout \
-		/Users/theo/Qt/5.12.6/clang_64/lib/QtWidgets.framework/Headers/qboxlayout.h \
 		../smokeProject/Clickablelabel.hh \
 		/Users/theo/Qt/5.12.6/clang_64/lib/QtWidgets.framework/Headers/QLabel \
 		/Users/theo/Qt/5.12.6/clang_64/lib/QtWidgets.framework/Headers/qlabel.h \
@@ -723,6 +724,11 @@ moc_Grille.cpp: ../smokeProject/Grille.hh \
 		/Users/theo/Qt/5.12.6/clang_64/lib/QtCore.framework/Headers/qnamespace.h \
 		/Users/theo/Qt/5.12.6/clang_64/lib/QtGui.framework/Headers/QMouseEvent \
 		/Users/theo/Qt/5.12.6/clang_64/lib/QtGui.framework/Headers/qevent.h \
+		../smokeProject/BoxDisplayInfo.hh \
+		/Users/theo/Qt/5.12.6/clang_64/lib/QtWidgets.framework/Headers/QDialog \
+		/Users/theo/Qt/5.12.6/clang_64/lib/QtWidgets.framework/Headers/qdialog.h \
+		/Users/theo/Qt/5.12.6/clang_64/lib/QtWidgets.framework/Headers/QVBoxLayout \
+		/Users/theo/Qt/5.12.6/clang_64/lib/QtWidgets.framework/Headers/qboxlayout.h \
 		moc_predefs.h \
 		/Users/theo/Qt/5.12.6/clang_64/bin/moc
 	/Users/theo/Qt/5.12.6/clang_64/bin/moc $(DEFINES) --include '/Users/theo/Documents/Polytech/EISE 4/C++/Projet/build-smokeProject-Desktop_Qt_5_12_6_clang_64bit-Debug/moc_predefs.h' -I/Users/theo/Qt/5.12.6/clang_64/mkspecs/macx-clang -I'/Users/theo/Documents/Polytech/EISE 4/C++/Projet/smokeProject' -I/Users/theo/Qt/5.12.6/clang_64/lib/QtWidgets.framework/Headers -I/Users/theo/Qt/5.12.6/clang_64/lib/QtGui.framework/Headers -I/Users/theo/Qt/5.12.6/clang_64/lib/QtCore.framework/Headers -I. -I/Library/Developer/CommandLineTools/usr/include/c++/v1 -I/Library/Developer/CommandLineTools/usr/lib/clang/11.0.0/include -I/Library/Developer/CommandLineTools/usr/include -I/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include -F/Users/theo/Qt/5.12.6/clang_64/lib ../smokeProject/Grille.hh -o moc_Grille.cpp
@@ -745,25 +751,16 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 
 ####### Compile
 
-Civil.o: ../smokeProject/Civil.cc ../smokeProject/Civil.hh \
-		../smokeProject/Grille.hh \
-		../smokeProject/Milieu.hh \
-		../smokeProject/Revetement.hh \
-		/Users/theo/Qt/5.12.6/clang_64/lib/QtWidgets.framework/Headers/QWidget \
-		/Users/theo/Qt/5.12.6/clang_64/lib/QtWidgets.framework/Headers/qwidget.h \
-		/Users/theo/Qt/5.12.6/clang_64/lib/QtWidgets.framework/Headers/QApplication \
-		/Users/theo/Qt/5.12.6/clang_64/lib/QtWidgets.framework/Headers/qapplication.h \
-		/Users/theo/Qt/5.12.6/clang_64/lib/QtWidgets.framework/Headers/QPushButton \
-		/Users/theo/Qt/5.12.6/clang_64/lib/QtWidgets.framework/Headers/qpushbutton.h \
-		/Users/theo/Qt/5.12.6/clang_64/lib/QtWidgets.framework/Headers/QBoxLayout \
-		/Users/theo/Qt/5.12.6/clang_64/lib/QtWidgets.framework/Headers/qboxlayout.h \
-		../smokeProject/Clickablelabel.hh \
+BoxDisplayInfo.o: ../smokeProject/BoxDisplayInfo.cc ../smokeProject/BoxDisplayInfo.hh \
+		/Users/theo/Qt/5.12.6/clang_64/lib/QtWidgets.framework/Headers/QDialog \
+		/Users/theo/Qt/5.12.6/clang_64/lib/QtWidgets.framework/Headers/qdialog.h \
 		/Users/theo/Qt/5.12.6/clang_64/lib/QtWidgets.framework/Headers/QLabel \
 		/Users/theo/Qt/5.12.6/clang_64/lib/QtWidgets.framework/Headers/qlabel.h \
-		/Users/theo/Qt/5.12.6/clang_64/lib/QtCore.framework/Headers/Qt \
-		/Users/theo/Qt/5.12.6/clang_64/lib/QtCore.framework/Headers/qnamespace.h \
-		/Users/theo/Qt/5.12.6/clang_64/lib/QtGui.framework/Headers/QMouseEvent \
-		/Users/theo/Qt/5.12.6/clang_64/lib/QtGui.framework/Headers/qevent.h
+		/Users/theo/Qt/5.12.6/clang_64/lib/QtWidgets.framework/Headers/QVBoxLayout \
+		/Users/theo/Qt/5.12.6/clang_64/lib/QtWidgets.framework/Headers/qboxlayout.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o BoxDisplayInfo.o ../smokeProject/BoxDisplayInfo.cc
+
+Civil.o: ../smokeProject/Civil.cc ../smokeProject/Civil.hh
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o Civil.o ../smokeProject/Civil.cc
 
 Clickablelabel.o: ../smokeProject/Clickablelabel.cc ../smokeProject/Clickablelabel.hh \
@@ -787,36 +784,23 @@ Grille.o: ../smokeProject/Grille.cc ../smokeProject/Grille.hh \
 		/Users/theo/Qt/5.12.6/clang_64/lib/QtWidgets.framework/Headers/qapplication.h \
 		/Users/theo/Qt/5.12.6/clang_64/lib/QtWidgets.framework/Headers/QPushButton \
 		/Users/theo/Qt/5.12.6/clang_64/lib/QtWidgets.framework/Headers/qpushbutton.h \
-		/Users/theo/Qt/5.12.6/clang_64/lib/QtWidgets.framework/Headers/QBoxLayout \
-		/Users/theo/Qt/5.12.6/clang_64/lib/QtWidgets.framework/Headers/qboxlayout.h \
 		../smokeProject/Clickablelabel.hh \
 		/Users/theo/Qt/5.12.6/clang_64/lib/QtWidgets.framework/Headers/QLabel \
 		/Users/theo/Qt/5.12.6/clang_64/lib/QtWidgets.framework/Headers/qlabel.h \
 		/Users/theo/Qt/5.12.6/clang_64/lib/QtCore.framework/Headers/Qt \
 		/Users/theo/Qt/5.12.6/clang_64/lib/QtCore.framework/Headers/qnamespace.h \
 		/Users/theo/Qt/5.12.6/clang_64/lib/QtGui.framework/Headers/QMouseEvent \
-		/Users/theo/Qt/5.12.6/clang_64/lib/QtGui.framework/Headers/qevent.h
+		/Users/theo/Qt/5.12.6/clang_64/lib/QtGui.framework/Headers/qevent.h \
+		../smokeProject/BoxDisplayInfo.hh \
+		/Users/theo/Qt/5.12.6/clang_64/lib/QtWidgets.framework/Headers/QDialog \
+		/Users/theo/Qt/5.12.6/clang_64/lib/QtWidgets.framework/Headers/qdialog.h \
+		/Users/theo/Qt/5.12.6/clang_64/lib/QtWidgets.framework/Headers/QVBoxLayout \
+		/Users/theo/Qt/5.12.6/clang_64/lib/QtWidgets.framework/Headers/qboxlayout.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o Grille.o ../smokeProject/Grille.cc
 
 Milieu.o: ../smokeProject/Milieu.cc ../smokeProject/Milieu.hh \
 		../smokeProject/Revetement.hh \
-		../smokeProject/Civil.hh \
-		../smokeProject/Grille.hh \
-		/Users/theo/Qt/5.12.6/clang_64/lib/QtWidgets.framework/Headers/QWidget \
-		/Users/theo/Qt/5.12.6/clang_64/lib/QtWidgets.framework/Headers/qwidget.h \
-		/Users/theo/Qt/5.12.6/clang_64/lib/QtWidgets.framework/Headers/QApplication \
-		/Users/theo/Qt/5.12.6/clang_64/lib/QtWidgets.framework/Headers/qapplication.h \
-		/Users/theo/Qt/5.12.6/clang_64/lib/QtWidgets.framework/Headers/QPushButton \
-		/Users/theo/Qt/5.12.6/clang_64/lib/QtWidgets.framework/Headers/qpushbutton.h \
-		/Users/theo/Qt/5.12.6/clang_64/lib/QtWidgets.framework/Headers/QBoxLayout \
-		/Users/theo/Qt/5.12.6/clang_64/lib/QtWidgets.framework/Headers/qboxlayout.h \
-		../smokeProject/Clickablelabel.hh \
-		/Users/theo/Qt/5.12.6/clang_64/lib/QtWidgets.framework/Headers/QLabel \
-		/Users/theo/Qt/5.12.6/clang_64/lib/QtWidgets.framework/Headers/qlabel.h \
-		/Users/theo/Qt/5.12.6/clang_64/lib/QtCore.framework/Headers/Qt \
-		/Users/theo/Qt/5.12.6/clang_64/lib/QtCore.framework/Headers/qnamespace.h \
-		/Users/theo/Qt/5.12.6/clang_64/lib/QtGui.framework/Headers/QMouseEvent \
-		/Users/theo/Qt/5.12.6/clang_64/lib/QtGui.framework/Headers/qevent.h
+		../smokeProject/Civil.hh
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o Milieu.o ../smokeProject/Milieu.cc
 
 main.o: ../smokeProject/main.cc /Users/theo/Qt/5.12.6/clang_64/lib/QtWidgets.framework/Headers/QApplication \
@@ -829,15 +813,18 @@ main.o: ../smokeProject/main.cc /Users/theo/Qt/5.12.6/clang_64/lib/QtWidgets.fra
 		/Users/theo/Qt/5.12.6/clang_64/lib/QtWidgets.framework/Headers/qwidget.h \
 		/Users/theo/Qt/5.12.6/clang_64/lib/QtWidgets.framework/Headers/QPushButton \
 		/Users/theo/Qt/5.12.6/clang_64/lib/QtWidgets.framework/Headers/qpushbutton.h \
-		/Users/theo/Qt/5.12.6/clang_64/lib/QtWidgets.framework/Headers/QBoxLayout \
-		/Users/theo/Qt/5.12.6/clang_64/lib/QtWidgets.framework/Headers/qboxlayout.h \
 		../smokeProject/Clickablelabel.hh \
 		/Users/theo/Qt/5.12.6/clang_64/lib/QtWidgets.framework/Headers/QLabel \
 		/Users/theo/Qt/5.12.6/clang_64/lib/QtWidgets.framework/Headers/qlabel.h \
 		/Users/theo/Qt/5.12.6/clang_64/lib/QtCore.framework/Headers/Qt \
 		/Users/theo/Qt/5.12.6/clang_64/lib/QtCore.framework/Headers/qnamespace.h \
 		/Users/theo/Qt/5.12.6/clang_64/lib/QtGui.framework/Headers/QMouseEvent \
-		/Users/theo/Qt/5.12.6/clang_64/lib/QtGui.framework/Headers/qevent.h
+		/Users/theo/Qt/5.12.6/clang_64/lib/QtGui.framework/Headers/qevent.h \
+		../smokeProject/BoxDisplayInfo.hh \
+		/Users/theo/Qt/5.12.6/clang_64/lib/QtWidgets.framework/Headers/QDialog \
+		/Users/theo/Qt/5.12.6/clang_64/lib/QtWidgets.framework/Headers/qdialog.h \
+		/Users/theo/Qt/5.12.6/clang_64/lib/QtWidgets.framework/Headers/QVBoxLayout \
+		/Users/theo/Qt/5.12.6/clang_64/lib/QtWidgets.framework/Headers/qboxlayout.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o main.o ../smokeProject/main.cc
 
 moc_Clickablelabel.o: moc_Clickablelabel.cpp 

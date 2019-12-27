@@ -1,4 +1,5 @@
 HEADERS += \
+    BoxDisplayInfo.hh \
     Civil.hh \
     Clickablelabel.hh \
     Grille.hh \
@@ -6,6 +7,7 @@ HEADERS += \
     Revetement.hh
 
 SOURCES += \
+    BoxDisplayInfo.cc \
     Civil.cc \
     Clickablelabel.cc \
     Grille.cc \
