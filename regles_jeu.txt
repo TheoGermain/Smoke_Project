@@ -1,0 +1,20 @@
+Règles du jeu " fight the smoke"
+
+but : Éteindre le feu en sauvant un maximum de Civil
+
+Règles :
+A chaque tour, le joueur choisi d'effectuer 1 action :
+déplacer un Pompier ou un véhicule
+arroser avec un pompier
+
+La partie se terminent si toutes les habitations et l'usine sont en feu (défaite) ou
+si tout le feu est éteins (victoire)
+
+Personnages :
+Civil : se déplacent aléatoirement dans la ville
+Pompier : capable d'arroser le feu, se déplacent de 1 cases par tour.
+Pompier en Chef : capable de conduire le camion
+
+Véhicules :
+Camions : contiens 6 pompiers, se déplacent de 6 cases par tour.
+Mobylette : contiens 2 pompiers, se déplacent de 3 cases par tour
