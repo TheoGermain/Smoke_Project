@@ -9,12 +9,15 @@
 #include <sstream>
 #include "Clickablelabel.hh"
 #include "BoxDisplayInfo.hh"
+#include "Pompier.hh"
+#include "QListItemPersonnage.hh"
 
 #define L_GRILLE 22
 #define C_GRILLE 40
 
 #define DEPART_FEU_START 4
 #define DEPART_CIVIL 7
+#define DEPART_POMPIER 10
 
 class Grille : public QWidget{
     Q_OBJECT
@@ -22,11 +25,10 @@ class Grille : public QWidget{
 public :
   Grille();
   virtual ~Grille();
+  static std::vector<int*> cases_en_feu;
   Milieu operator()(std::size_t L, std::size_t C) const;
   Milieu& operator()(std::size_t L, std::size_t C);
   friend std::ostream& operator<<(std::ostream& out, const Grille& g);
-  static std::vector<int*> cases_en_feu;
-  static int nbCivilMort;
   void turn_on_fire(int L, int C);
   void turn_off_fire(int L, int C);
 
@@ -35,6 +37,9 @@ public slots :
   void boxClicked(int, int);
   void gameStart();
   void tourSuivant();
+  void displayActions(QListWidgetItem *item);
+  void cleanPossibleMovement(void);
+  void displayNextTurn();
 
 signals:
   void displayInfo();
@@ -49,14 +54,20 @@ private :
   void deplacer_personnage(std::vector<int>, int, int, std::pair<Civil*, ClickableLabel*>*);
   void baisse_pdv();
   void propagation();
-  void deplacement_personnages(void);
+  void deplacement_civils(void);
+  void displayPossibleMovement(Pompier*);
+
+
   Milieu **plateau;
   std::vector<std::vector<ClickableLabel*>> _imgFeu;
+  std::vector<std::vector<ClickableLabel*>> _imgAction;
   std::vector<std::pair<Civil*, ClickableLabel*>> _civilList;
+  std::vector<std::pair<Pompier*, ClickableLabel*>> _pompierList;
   ClickableLabel *_map;
   QPushButton *_start;
   QPushButton *_nextTurn;
   QLabel *_nbCivil;
   QLabel *_nbFeu;
+  QLabel *_nbPompier;
   BoxDisplayInfo *_fenetreInfoCase;
 };

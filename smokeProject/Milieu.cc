@@ -84,11 +84,11 @@ void Milieu::set_degre_de_feu(){
   }
 }
 
-void Milieu::ajouterCivil(Civil* c){
+void Milieu::ajouterPersonnage(Civil* c){
     personnages.push_back(c);
 }
 
-void Milieu::supprimerCivil(const Civil* c){
+void Milieu::supprimerPersonnage(const Civil* c){
     std::vector<Civil*>::iterator to_erase;
     for(auto it = personnages.begin(); it != personnages.end(); it++){
         if(!(*it)->get_name().compare(c->get_name()))

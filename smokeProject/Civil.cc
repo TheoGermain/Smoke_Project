@@ -85,15 +85,6 @@ std::string Civil::get_name() const{
 
 std::string Civil::toString(void){
     std::stringstream ss;
-    ss << _name << "   " << "PV : " << _pdv << "   " << "PM " << _pdm;
+    ss << _name << "    " << "PV " << _pdv;
     return ss.str();
 }
-
-/*int Civil::deplacer(int x, int y){
-    if()
-}*/
-
-/*std::ostream& operator<<(std::ostream& out, const Civil& c){
-  out << c._name << ", pos : (" << c._pos[0] << ',' << c._pos[1] << "), " << c._pdv << " PV, " << c._pdm << " PM";
-  return out;
-}*/

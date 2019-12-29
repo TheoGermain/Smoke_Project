@@ -4,18 +4,25 @@
 #include <QVBoxLayout>
 #include <string>
 #include <QListWidget>
+#include <QCloseEvent>
 
 class BoxDisplayInfo : public QDialog{
+    Q_OBJECT
 
 public:
-    BoxDisplayInfo();
+    BoxDisplayInfo(QWidget *parent = nullptr);
     virtual ~BoxDisplayInfo();
     void set_coordCase(std::string str);
     void set_revCase(std::string str);
     void set_statusCase(std::string str);
     void set_intensiteFeuCase(std::string str);
-    void addItem(std::string);
+    void addItem(QListWidgetItem*);
     void clear(void);
+    QListWidget* get_list(void);
+    void reject();
+
+signals:
+    void close();
 
 
 private:

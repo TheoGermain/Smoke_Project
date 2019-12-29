@@ -10,8 +10,6 @@ public :
   Civil();
   Civil(int x, int y, int pv = 1, int pm = 4);
   virtual ~Civil();
-  //friend std::ostream& operator<<(std::ostream& out, const Civil& c);
-  //void deplacer(int x, int y);
   std::vector<int> get_pos();
   void set_pos(int, int);
   void set_pdv(int pdv);

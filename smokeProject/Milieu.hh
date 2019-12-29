@@ -18,8 +18,8 @@ public :
   int get_fire(){return degre_de_feu;}
   std::vector<Civil*> get_personnages(void);
   NSRevetement::Revetement get_revetement() const;
-  void ajouterCivil(Civil*);
-  void supprimerCivil(const Civil*);
+  void ajouterPersonnage(Civil*);
+  void supprimerPersonnage(const Civil*);
 
   static std::map<NSRevetement::Revetement, int> map_coeff_propagation;
   static std::map<NSRevetement::Revetement, int> map_proba_feu;
