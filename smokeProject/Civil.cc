@@ -85,6 +85,6 @@ std::string Civil::get_name() const{
 
 std::string Civil::toString(void){
     std::stringstream ss;
-    ss << _name << "    " << "PV " << _pdv;
+    ss << _name << "  " << "PV" <<  '(' << _pdv << ')';
     return ss.str();
 }

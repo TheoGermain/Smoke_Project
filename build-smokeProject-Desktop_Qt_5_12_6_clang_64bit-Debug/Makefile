@@ -252,6 +252,7 @@ DIST          = /Users/theo/Qt/5.12.6/clang_64/mkspecs/features/spec_pre.prf \
 		../smokeProject/Milieu.hh \
 		../smokeProject/Pompier.hh \
 		../smokeProject/QListItemPersonnage.hh \
+		../smokeProject/Recipient.hh \
 		../smokeProject/Revetement.hh ../smokeProject/BoxDisplayInfo.cc \
 		../smokeProject/Civil.cc \
 		../smokeProject/Clickablelabel.cc \
@@ -665,7 +666,7 @@ distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents /Users/theo/Qt/5.12.6/clang_64/mkspecs/features/data/dummy.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents ../smokeProject/BoxDisplayInfo.hh ../smokeProject/Civil.hh ../smokeProject/Clickablelabel.hh ../smokeProject/Grille.hh ../smokeProject/Milieu.hh ../smokeProject/Pompier.hh ../smokeProject/QListItemPersonnage.hh ../smokeProject/Revetement.hh $(DISTDIR)/
+	$(COPY_FILE) --parents ../smokeProject/BoxDisplayInfo.hh ../smokeProject/Civil.hh ../smokeProject/Clickablelabel.hh ../smokeProject/Grille.hh ../smokeProject/Milieu.hh ../smokeProject/Pompier.hh ../smokeProject/QListItemPersonnage.hh ../smokeProject/Recipient.hh ../smokeProject/Revetement.hh $(DISTDIR)/
 	$(COPY_FILE) --parents ../smokeProject/BoxDisplayInfo.cc ../smokeProject/Civil.cc ../smokeProject/Clickablelabel.cc ../smokeProject/Grille.cc ../smokeProject/Milieu.cc ../smokeProject/Pompier.cc ../smokeProject/QListItemPersonnage.cc ../smokeProject/main.cc $(DISTDIR)/
 
 
@@ -758,6 +759,7 @@ moc_Grille.cpp: ../smokeProject/Grille.hh \
 		/Users/theo/Qt/5.12.6/clang_64/lib/QtWidgets.framework/Headers/qlistwidget.h \
 		/Users/theo/Qt/5.12.6/clang_64/lib/QtGui.framework/Headers/QCloseEvent \
 		../smokeProject/Pompier.hh \
+		../smokeProject/Recipient.hh \
 		../smokeProject/QListItemPersonnage.hh \
 		/Users/theo/Qt/5.12.6/clang_64/lib/QtWidgets.framework/Headers/QListWidgetItem \
 		moc_predefs.h \
@@ -835,6 +837,7 @@ Grille.o: ../smokeProject/Grille.cc ../smokeProject/Grille.hh \
 		/Users/theo/Qt/5.12.6/clang_64/lib/QtWidgets.framework/Headers/qlistwidget.h \
 		/Users/theo/Qt/5.12.6/clang_64/lib/QtGui.framework/Headers/QCloseEvent \
 		../smokeProject/Pompier.hh \
+		../smokeProject/Recipient.hh \
 		../smokeProject/QListItemPersonnage.hh \
 		/Users/theo/Qt/5.12.6/clang_64/lib/QtWidgets.framework/Headers/QListWidgetItem
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o Grille.o ../smokeProject/Grille.cc
@@ -845,7 +848,8 @@ Milieu.o: ../smokeProject/Milieu.cc ../smokeProject/Milieu.hh \
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o Milieu.o ../smokeProject/Milieu.cc
 
 Pompier.o: ../smokeProject/Pompier.cc ../smokeProject/Pompier.hh \
-		../smokeProject/Civil.hh
+		../smokeProject/Civil.hh \
+		../smokeProject/Recipient.hh
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o Pompier.o ../smokeProject/Pompier.cc
 
 QListItemPersonnage.o: ../smokeProject/QListItemPersonnage.cc ../smokeProject/QListItemPersonnage.hh \
@@ -880,6 +884,7 @@ main.o: ../smokeProject/main.cc /Users/theo/Qt/5.12.6/clang_64/lib/QtWidgets.fra
 		/Users/theo/Qt/5.12.6/clang_64/lib/QtWidgets.framework/Headers/qlistwidget.h \
 		/Users/theo/Qt/5.12.6/clang_64/lib/QtGui.framework/Headers/QCloseEvent \
 		../smokeProject/Pompier.hh \
+		../smokeProject/Recipient.hh \
 		../smokeProject/QListItemPersonnage.hh \
 		/Users/theo/Qt/5.12.6/clang_64/lib/QtWidgets.framework/Headers/QListWidgetItem
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o main.o ../smokeProject/main.cc

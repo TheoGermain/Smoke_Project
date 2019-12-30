@@ -38,8 +38,9 @@ public slots :
   void gameStart();
   void tourSuivant();
   void displayActions(QListWidgetItem *item);
-  void cleanPossibleMovement(void);
+  void cleanPossibilities(void);
   void displayNextTurn();
+  void afficherPorteeArrosage(void);
 
 signals:
   void displayInfo();
@@ -55,7 +56,7 @@ private :
   void baisse_pdv();
   void propagation();
   void deplacement_civils(void);
-  void displayPossibleMovement(Pompier*);
+  void displayPossibilities(std::vector<int>, int);
 
 
   Milieu **plateau;
@@ -66,6 +67,7 @@ private :
   ClickableLabel *_map;
   QPushButton *_start;
   QPushButton *_nextTurn;
+  QPushButton *_arroser;
   QLabel *_nbCivil;
   QLabel *_nbFeu;
   QLabel *_nbPompier;

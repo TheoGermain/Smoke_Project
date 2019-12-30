@@ -1,6 +1,7 @@
 #include "Grille.hh"
 
 bool flag_deplacement = false;
+bool flag_arroser = false;
 int nbCivilMort = 0;
 int nbPompier = DEPART_POMPIER;
 std::pair<Civil*, ClickableLabel*> currentlySelected;
@@ -22,6 +23,11 @@ Grille::Grille() : _imgFeu(L_GRILLE, std::vector<ClickableLabel*>()),  _pompierL
   _nextTurn = new QPushButton("Tour Suivant", this);
   _nextTurn->move(this->frameSize().width()/2 - _start->frameSize().width()/2, 780);
   _nextTurn->setVisible(false);
+
+  // Bouton ARROSER
+  _arroser = new QPushButton("Arroser", this);
+  _arroser->move(this->frameSize().width()/4 - _start->frameSize().width()/2, 780);
+  _arroser->setVisible(false);
 
   // Plateau
   plateau = new Milieu*[L_GRILLE];
@@ -68,13 +74,20 @@ Grille::Grille() : _imgFeu(L_GRILLE, std::vector<ClickableLabel*>()),  _pompierL
   }
 
   // Affichage caché des pompiers
+  int n = 0;
   for(auto &it : _pompierList){
       ClickableLabel *nPompier = new ClickableLabel(this);
       nPompier->setPixmap(QPixmap(QApplication::applicationDirPath() + "/../../../pompier.png"));
       nPompier->setVisible(false);
-      it.first = new Pompier;
+      if(n == 0 || n == 1)
+        it.first = new Pompier();
+      else if(n == 2 || n == 3)
+          it.first = new Pompier(new Lance());
+      else
+          it.first = new Pompier(new Extincteur);
       it.second = nPompier;
       QObject::connect(nPompier, SIGNAL(clickedImg(int, int)), this, SLOT(boxClicked(int, int)));
+      n++;
   }
 
   // Initialisation du plateau grace au map descriptor
@@ -157,7 +170,7 @@ Grille::Grille() : _imgFeu(L_GRILLE, std::vector<ClickableLabel*>()),  _pompierL
 
   // Fenetre pour l'affichage des informations d'une case
   _fenetreInfoCase = new BoxDisplayInfo(this);
-  _fenetreInfoCase->setFixedSize(200, 300);
+  _fenetreInfoCase->setFixedSize(260, 300);
 
   // Connexion des signaux et slots
   QObject::connect(_map, SIGNAL(clicked(int, int)), this, SLOT(boxClicked(int, int)));
@@ -165,8 +178,9 @@ Grille::Grille() : _imgFeu(L_GRILLE, std::vector<ClickableLabel*>()),  _pompierL
   QObject::connect(_nextTurn, SIGNAL(clicked()), this, SLOT(tourSuivant()));
   QObject::connect(this, SIGNAL(displayInfo()), _fenetreInfoCase, SLOT(show()));
   QObject::connect(_fenetreInfoCase->get_list(), SIGNAL(itemClicked(QListWidgetItem *)), this, SLOT(displayActions(QListWidgetItem *)));
-  QObject::connect(_fenetreInfoCase, SIGNAL(close()), this, SLOT(cleanPossibleMovement()));
+  QObject::connect(_fenetreInfoCase, SIGNAL(close()), this, SLOT(cleanPossibilities()));
   QObject::connect(_fenetreInfoCase, SIGNAL(close()), this, SLOT(displayNextTurn()));
+  QObject::connect(_arroser, SIGNAL(clicked()), this, SLOT(afficherPorteeArrosage()));
 }
 
 Grille::~Grille(){
@@ -238,6 +252,7 @@ void Grille::turn_off_fire(int L, int C){
       break;
     }
   }
+  _nbFeu->setText(QString::fromStdString(std::to_string(cases_en_feu.size())));
 }
 
 void Grille::propagation_feu_ligne(int coeff_propagation, std::size_t L, std::size_t C){
@@ -330,7 +345,7 @@ void Grille::propagation_feu_diagonaleDG(int coeff_propagation, std::size_t L, s
 }
 
 void Grille::boxClicked(int L, int C){
-    if(!flag_deplacement){
+    if(!flag_deplacement && !flag_arroser){
         if((L < L_GRILLE/2) && (C < C_GRILLE/2))
             _fenetreInfoCase->move((C + 2)*35, L*35);
         else if((L < L_GRILLE/2) && (C >= C_GRILLE/2))
@@ -373,9 +388,39 @@ void Grille::boxClicked(int L, int C){
             flag_deplacement = false;
             if(Pompier *p = static_cast<Pompier*>(currentlySelected.first)){
                 p->set_deplacementEffectue(true);
-                currentlySelected.second->setPixmap(QApplication::applicationDirPath() + "/../../../pompier_deplacement.png");
+                if(p->get_arrosageEffectue() && p->get_deplacementEffectue())
+                    currentlySelected.second->setPixmap(QApplication::applicationDirPath() + "/../../../pompier_deplacement.png");
             }
-            cleanPossibleMovement();
+            cleanPossibilities();
+        }
+    }
+    else if(flag_arroser){
+        if(_imgAction[L][C]->isVisible() && plateau[L][C].get_en_feu()){
+            Pompier* p = dynamic_cast<Pompier*>(currentlySelected.first);
+            p->set_arrosageEffectue(true);
+            int n = 1;
+            for(int i = L - 1; i <= L + 1; i ++){
+                for(int j = C - 1 + n; j <= C + 1 - n; j++){
+                    if(j == p->get_pos()[0] && i == p->get_pos()[1])
+                        continue;
+                    if(plateau[i][j].get_en_feu()){
+                        plateau[i][j].set_fire(plateau[L][C].get_fire() - p->get_recip()->get_puissance());
+
+                        if(plateau[i][j].get_fire() <= 0){
+                            _imgFeu[i][j]->setPixmap(QApplication::applicationDirPath() + "/../../../cendre.png");
+                            turn_off_fire(i, j);
+                        }
+                    }
+                }
+                if(i < L)
+                    n--;
+                else
+                    n++;
+            }
+            p->get_recip()->decrement_contenuRestant();
+            cleanPossibilities();
+            if(p->get_arrosageEffectue() && p->get_deplacementEffectue())
+                currentlySelected.second->setPixmap(QApplication::applicationDirPath() + "/../../../pompier_deplacement.png");
         }
     }
 }
@@ -436,6 +481,7 @@ void Grille::tourSuivant(){
         if(it.first->get_pdv() <= 0)
             continue;
         it.first->set_deplacementEffectue(false);
+        it.first->set_arrosageEffectue(false);
         it.second->setPixmap(QApplication::applicationDirPath() + "/../../../pompier.png");
     }
 
@@ -509,28 +555,30 @@ void Grille::baisse_pdv(){
 
 
 void Grille::displayActions(QListWidgetItem *item){
-    cleanPossibleMovement();
+    cleanPossibilities();
     if(QListItemPersonnage *item_tmp = dynamic_cast<QListItemPersonnage*>(item))
         if(Pompier *p = dynamic_cast<Pompier*>(item_tmp->get_civil())){
-            if(!p->get_deplacementEffectue()){
-                for(auto &it : _pompierList){
-                    if(it.first->get_name().compare(p->get_name()) == 0){
-                        currentlySelected.first = it.first;
-                        currentlySelected.second = it.second;
-                    }
+            _nextTurn->setVisible(false);
+            for(auto &it : _pompierList){
+                if(it.first->get_name().compare(p->get_name()) == 0){
+                    currentlySelected.first = it.first;
+                    currentlySelected.second = it.second;
                 }
+            }
+            if(!p->get_arrosageEffectue()){
+                _arroser->setVisible(true);
+            }
+            if(!p->get_deplacementEffectue()){
                 flag_deplacement = true;
-                _nextTurn->setVisible(false);
-                displayPossibleMovement(p);
+                displayPossibilities(p->get_pos(), p->get_pdm());
             }
         }
 }
 
-void Grille::displayPossibleMovement(Pompier* p){
-    std::vector<int> pos = p->get_pos();
-    int n = p->get_pdm();
-    for(int i = (pos[1] - p->get_pdm() + 1); i < (pos[1] + p->get_pdm()); i++){
-        for(int j = (pos[0] - p->get_pdm() + n); j < (pos[0] + p->get_pdm() - n + 1); j++){
+void Grille::displayPossibilities(std::vector<int> pos, int portee){
+    int n = portee;
+    for(int i = (pos[1] - portee + 1); i < (pos[1] + portee); i++){
+        for(int j = (pos[0] - portee + n); j < (pos[0] + portee - n + 1); j++){
             if(i == pos[1] && j == pos[0])
                 continue;
             else if(i >= 0 && i < L_GRILLE && j >= 0 && j < C_GRILLE && plateau[i][j].get_revetement() != NSRevetement::eau)
@@ -543,7 +591,10 @@ void Grille::displayPossibleMovement(Pompier* p){
     }
 }
 
-void Grille::cleanPossibleMovement(void){
+void Grille::cleanPossibilities(void){
+    flag_arroser = false;
+    flag_deplacement = false;
+    _arroser->setVisible(false);
     for(auto &it : _imgAction){
         for(auto &it2 : it){
             it2->setVisible(false);
@@ -554,4 +605,12 @@ void Grille::cleanPossibleMovement(void){
 
 void Grille::displayNextTurn(){
     _nextTurn->setVisible(true);
+}
+
+void Grille::afficherPorteeArrosage(){
+    cleanPossibilities();
+    _arroser->setVisible(false);
+    flag_arroser = true;
+    flag_deplacement = false;
+    displayPossibilities(currentlySelected.first->get_pos(), dynamic_cast<Pompier*>(currentlySelected.first)->get_recip()->get_portee());
 }

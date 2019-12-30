@@ -6,6 +6,7 @@ HEADERS += \
     Milieu.hh \
     Pompier.hh \
     QListItemPersonnage.hh \
+    Recipient.hh \
     Revetement.hh
 
 SOURCES += \

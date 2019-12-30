@@ -17,7 +17,7 @@ public :
   int get_pdm(void);
   std::string get_name() const;
   void calcul_dest(int direction, int deplacement, int &x, int &y);
-  std::string toString(void);
+  virtual std::string toString(void);
 
   static int cpt;
 

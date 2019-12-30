@@ -21,8 +21,8 @@ QT_BEGIN_MOC_NAMESPACE
 QT_WARNING_PUSH
 QT_WARNING_DISABLE_DEPRECATED
 struct qt_meta_stringdata_Grille_t {
-    QByteArrayData data[11];
-    char stringdata0[128];
+    QByteArrayData data[12];
+    char stringdata0[148];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -40,13 +40,15 @@ QT_MOC_LITERAL(5, 41, 11), // "tourSuivant"
 QT_MOC_LITERAL(6, 53, 14), // "displayActions"
 QT_MOC_LITERAL(7, 68, 16), // "QListWidgetItem*"
 QT_MOC_LITERAL(8, 85, 4), // "item"
-QT_MOC_LITERAL(9, 90, 21), // "cleanPossibleMovement"
-QT_MOC_LITERAL(10, 112, 15) // "displayNextTurn"
+QT_MOC_LITERAL(9, 90, 18), // "cleanPossibilities"
+QT_MOC_LITERAL(10, 109, 15), // "displayNextTurn"
+QT_MOC_LITERAL(11, 125, 22) // "afficherPorteeArrosage"
 
     },
     "Grille\0displayInfo\0\0boxClicked\0gameStart\0"
     "tourSuivant\0displayActions\0QListWidgetItem*\0"
-    "item\0cleanPossibleMovement\0displayNextTurn"
+    "item\0cleanPossibilities\0displayNextTurn\0"
+    "afficherPorteeArrosage"
 };
 #undef QT_MOC_LITERAL
 
@@ -56,7 +58,7 @@ static const uint qt_meta_data_Grille[] = {
        8,       // revision
        0,       // classname
        0,    0, // classinfo
-       7,   14, // methods
+       8,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -64,15 +66,16 @@ static const uint qt_meta_data_Grille[] = {
        1,       // signalCount
 
  // signals: name, argc, parameters, tag, flags
-       1,    0,   49,    2, 0x06 /* Public */,
+       1,    0,   54,    2, 0x06 /* Public */,
 
  // slots: name, argc, parameters, tag, flags
-       3,    2,   50,    2, 0x0a /* Public */,
-       4,    0,   55,    2, 0x0a /* Public */,
-       5,    0,   56,    2, 0x0a /* Public */,
-       6,    1,   57,    2, 0x0a /* Public */,
-       9,    0,   60,    2, 0x0a /* Public */,
-      10,    0,   61,    2, 0x0a /* Public */,
+       3,    2,   55,    2, 0x0a /* Public */,
+       4,    0,   60,    2, 0x0a /* Public */,
+       5,    0,   61,    2, 0x0a /* Public */,
+       6,    1,   62,    2, 0x0a /* Public */,
+       9,    0,   65,    2, 0x0a /* Public */,
+      10,    0,   66,    2, 0x0a /* Public */,
+      11,    0,   67,    2, 0x0a /* Public */,
 
  // signals: parameters
     QMetaType::Void,
@@ -82,6 +85,7 @@ static const uint qt_meta_data_Grille[] = {
     QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void, 0x80000000 | 7,    8,
+    QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void,
 
@@ -99,8 +103,9 @@ void Grille::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void
         case 2: _t->gameStart(); break;
         case 3: _t->tourSuivant(); break;
         case 4: _t->displayActions((*reinterpret_cast< QListWidgetItem*(*)>(_a[1]))); break;
-        case 5: _t->cleanPossibleMovement(); break;
+        case 5: _t->cleanPossibilities(); break;
         case 6: _t->displayNextTurn(); break;
+        case 7: _t->afficherPorteeArrosage(); break;
         default: ;
         }
     } else if (_c == QMetaObject::IndexOfMethod) {
@@ -144,13 +149,13 @@ int Grille::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 7)
+        if (_id < 8)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 7;
+        _id -= 8;
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 7)
+        if (_id < 8)
             *reinterpret_cast<int*>(_a[0]) = -1;
-        _id -= 7;
+        _id -= 8;
     }
     return _id;
 }
