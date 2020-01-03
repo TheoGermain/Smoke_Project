@@ -1,33 +1,29 @@
 #include "Grille.hh"
 
+bool flag_rejouer = false;
 bool flag_deplacement = false;
 bool flag_arroser = false;
+bool flag_monterVehicule = false;
+bool flag_conduire = false;
 int nbCivilMort = 0;
+int nbTour = -1;
+int nbCaseBrule = 0;
 int nbPompier = DEPART_POMPIER;
 std::pair<Civil*, ClickableLabel*> currentlySelected;
+std::pair<Vehicule*, ClickableLabel*> currentlySelectedVehicule;
 
 std::vector<int*> Grille::cases_en_feu;
 
-
-Grille::Grille() : _imgFeu(L_GRILLE, std::vector<ClickableLabel*>()),  _pompierList(DEPART_POMPIER), _imgAction(L_GRILLE, std::vector<ClickableLabel*>()), _civilList(DEPART_CIVIL){
+Grille::Grille() : _imgFeu(L_GRILLE, std::vector<ClickableLabel*>()), _imgAction(L_GRILLE, std::vector<ClickableLabel*>()), _civilList(DEPART_CIVIL), _pompierList(DEPART_POMPIER), _vehiculeList(DEPART_VEHICULE){
+  flag_rejouer = false;
   int pos_l = 0;
   int pos_c = 0;
   std::string path = QApplication::applicationDirPath().toUtf8().constData();
+  std::cout << path << std::endl;
   setFixedSize(1400, 820);
 
-  // Bouton START
-  _start = new QPushButton("START", this);
-  _start->move(this->frameSize().width()/2 - _start->frameSize().width()/2, 780);
-
-  // Bouton TOUR SUIVANT
-  _nextTurn = new QPushButton("Tour Suivant", this);
-  _nextTurn->move(this->frameSize().width()/2 - _start->frameSize().width()/2, 780);
-  _nextTurn->setVisible(false);
-
-  // Bouton ARROSER
-  _arroser = new QPushButton("Arroser", this);
-  _arroser->move(this->frameSize().width()/4 - _start->frameSize().width()/2, 780);
-  _arroser->setVisible(false);
+  // Afficher un message
+  _msg = new MessageBox(this);
 
   // Plateau
   plateau = new Milieu*[L_GRILLE];
@@ -36,59 +32,12 @@ Grille::Grille() : _imgFeu(L_GRILLE, std::vector<ClickableLabel*>()),  _pompierL
 
   // MAP
   _map = new ClickableLabel(this);
-  _map->setPixmap(QPixmap(QApplication::applicationDirPath() + "/../../../map1.png"));
-  std::ifstream mapDescriptor(path + "/../../../mapDescriptor.txt");
+  _map->setPixmap(QPixmap(QApplication::applicationDirPath() + "/imagesFolder/map1.png"));
+  std::ifstream mapDescriptor(path + "/imagesFolder/mapDescriptor.txt");
 
-  // Symboles FEU non affichés
-  for(int j = 0; j < L_GRILLE; j++){
-      for(int k = 0; k < C_GRILLE; k++){
-          ClickableLabel *imgFeu = new ClickableLabel(this);
-          imgFeu->setPixmap(QPixmap(QApplication::applicationDirPath() + "/../../../feu.png"));
-          imgFeu->setGeometry(k*35, j*35, 35, 35);
-          imgFeu->setVisible(false);
-          _imgFeu[j].push_back(imgFeu);
-          QObject::connect(imgFeu, SIGNAL(clickedImg(int, int)), this, SLOT(boxClicked(int, int)));
-      }
-  }
-
-  // Symboles 'ACTION' non affichés
-  for(int j = 0; j < L_GRILLE; j++){
-      for(int k = 0; k < C_GRILLE; k++){
-          ClickableLabel *imgAction = new ClickableLabel(this);
-          imgAction->setPixmap(QPixmap(QApplication::applicationDirPath() + "/../../../action.png"));
-          imgAction->setGeometry(k*35, j*35, 35, 35);
-          imgAction->setVisible(false);
-          _imgAction[j].push_back(imgAction);
-          QObject::connect(imgAction, SIGNAL(clickedImg(int, int)), this, SLOT(boxClicked(int, int)));
-      }
-  }
-
-  // Affichage caché des civils
-  for(auto &it : _civilList){
-      ClickableLabel *nCivil = new ClickableLabel(this);
-      nCivil->setPixmap(QPixmap(QApplication::applicationDirPath() + "/../../../civil.png"));
-      nCivil->setVisible(false);
-      it.first = new Civil;
-      it.second = nCivil;
-      QObject::connect(nCivil, SIGNAL(clickedImg(int, int)), this, SLOT(boxClicked(int, int)));
-  }
-
-  // Affichage caché des pompiers
-  int n = 0;
-  for(auto &it : _pompierList){
-      ClickableLabel *nPompier = new ClickableLabel(this);
-      nPompier->setPixmap(QPixmap(QApplication::applicationDirPath() + "/../../../pompier.png"));
-      nPompier->setVisible(false);
-      if(n == 0 || n == 1)
-        it.first = new Pompier();
-      else if(n == 2 || n == 3)
-          it.first = new Pompier(new Lance());
-      else
-          it.first = new Pompier(new Extincteur);
-      it.second = nPompier;
-      QObject::connect(nPompier, SIGNAL(clickedImg(int, int)), this, SLOT(boxClicked(int, int)));
-      n++;
-  }
+  initSymboles();
+  initListes();
+  initBoutons();
 
   // Initialisation du plateau grace au map descriptor
   while(!mapDescriptor.eof()){
@@ -129,58 +78,16 @@ Grille::Grille() : _imgFeu(L_GRILLE, std::vector<ClickableLabel*>()),  _pompierL
         pos_l++;
     }
   }
-
-  // Affichage nombre de civils
-  QLabel *blackRect = new QLabel(this);
-  QLabel *logoCivil = new QLabel(this);
-  _nbCivil = new QLabel(this);
-  QFont font = _nbCivil->font();
-  font.setPixelSize(26);
-  _nbCivil->setFont(font);
-  _nbCivil->setText(QString::fromStdString(std::to_string(DEPART_CIVIL - nbCivilMort)));
-  blackRect->setPixmap(QApplication::applicationDirPath() + "/../../../blackRect.png");
-  logoCivil->setPixmap(QApplication::applicationDirPath() + "/../../../civil.png");
-  _nbCivil->move(1050, 780);
-  blackRect->move(1000, 777);
-  logoCivil->move(1000, 777);
-  _nbCivil->setVisible(false);
-
-  // Affichage nombre de cases en feu
-  QLabel *blackRect2 = new QLabel(this);
-  QLabel *logoFeu = new QLabel(this);
-  _nbFeu = new QLabel(this);
-  _nbFeu->setFixedSize(100, _nbFeu->height());
-  _nbFeu->setFont(font);
-  blackRect2->setPixmap(QApplication::applicationDirPath() + "/../../../blackRect.png");
-  logoFeu->setPixmap(QApplication::applicationDirPath() + "/../../../feu.png");
-  _nbFeu->move(1150, 780);
-  logoFeu->move(1100, 777);
-  _nbFeu->setVisible(false);
-
-  // Affichage nombre de pompier
-  QLabel *logoPompier = new QLabel(this);
-  _nbPompier = new QLabel(QString::fromStdString(std::to_string(nbPompier)), this);
-  _nbPompier->setFixedSize(100, _nbPompier->height());
-  _nbPompier->setFont(font);
-  logoPompier->setPixmap(QApplication::applicationDirPath() + "/../../../pompier.png");
-  _nbPompier->move(1250, 780);
-  blackRect2->move(1200, 777);
-  logoPompier->move(1200, 777);
-  _nbPompier->setVisible(false);
+  affichageNombres();
 
   // Fenetre pour l'affichage des informations d'une case
   _fenetreInfoCase = new BoxDisplayInfo(this);
-  _fenetreInfoCase->setFixedSize(260, 300);
+  _fenetreInfoCase->setFixedSize(270, 300);
 
-  // Connexion des signaux et slots
-  QObject::connect(_map, SIGNAL(clicked(int, int)), this, SLOT(boxClicked(int, int)));
-  QObject::connect(_start, SIGNAL(clicked()), this, SLOT(gameStart()));
-  QObject::connect(_nextTurn, SIGNAL(clicked()), this, SLOT(tourSuivant()));
-  QObject::connect(this, SIGNAL(displayInfo()), _fenetreInfoCase, SLOT(show()));
-  QObject::connect(_fenetreInfoCase->get_list(), SIGNAL(itemClicked(QListWidgetItem *)), this, SLOT(displayActions(QListWidgetItem *)));
-  QObject::connect(_fenetreInfoCase, SIGNAL(close()), this, SLOT(cleanPossibilities()));
-  QObject::connect(_fenetreInfoCase, SIGNAL(close()), this, SLOT(displayNextTurn()));
-  QObject::connect(_arroser, SIGNAL(clicked()), this, SLOT(afficherPorteeArrosage()));
+  // Affichages règles du jeu
+  _regles = new ReglesDuJeu(this);
+
+  connexionSignaux();
 }
 
 Grille::~Grille(){
@@ -199,7 +106,6 @@ Milieu Grille::operator()(std::size_t L, std::size_t C) const{
 Milieu& Grille::operator()(std::size_t L, std::size_t C){
   return plateau[L][C];
 }
-
 
 std::ostream& operator<<(std::ostream& out, const Grille& g){
   for(std::size_t i = 0; i < L_GRILLE; i++){
@@ -264,7 +170,7 @@ void Grille::propagation_feu_ligne(int coeff_propagation, std::size_t L, std::si
     max = C_GRILLE - 1;
 
   for(int i = min; i <= max; i++){
-    if(i == C || (*this)(L,i).get_en_feu())
+    if((size_t)i == C || (*this)(L,i).get_en_feu())
       continue;
     if(declaration_feu(L, i))
       turn_on_fire((int)L,i);
@@ -280,7 +186,7 @@ void Grille::propagation_feu_colonne(int coeff_propagation, std::size_t L, std::
     max = L_GRILLE - 1;
 
   for(int i = min; i <= max; i++){
-    if(i == L || (*this)(i,C).get_en_feu())
+    if((size_t)i == L || (*this)(i,C).get_en_feu())
       continue;
     if(declaration_feu(i, C))
       turn_on_fire(i,(int)C);
@@ -300,10 +206,8 @@ void Grille::propagation_feu_diagonaleGD(int coeff_propagation, std::size_t L, s
     max_L = L_GRILLE - 1;
   if(max_C >= C_GRILLE)
     max_C = C_GRILLE - 1;
-
-
   while(min_L <= max_L && min_C <= max_C){
-    if((min_L == L && min_C == C) || ((*this)(min_L, min_C).get_en_feu())){
+    if(((size_t)min_L == L && (size_t)min_C == C) || ((*this)(min_L, min_C).get_en_feu())){
       min_L++;
       min_C++;
       continue;
@@ -331,7 +235,7 @@ void Grille::propagation_feu_diagonaleDG(int coeff_propagation, std::size_t L, s
     max_C = 0;
 
   while(min_L != (max_L+1) && min_C != (max_C-1)){
-    if((min_L == L && min_C == C) || ((*this)(min_L, min_C).get_en_feu())){
+    if(((size_t)min_L == L && (size_t)min_C == C) || ((*this)(min_L, min_C).get_en_feu())){
       min_L++;
       min_C--;
       continue;
@@ -345,134 +249,78 @@ void Grille::propagation_feu_diagonaleDG(int coeff_propagation, std::size_t L, s
 }
 
 void Grille::boxClicked(int L, int C){
-    if(!flag_deplacement && !flag_arroser){
-        if((L < L_GRILLE/2) && (C < C_GRILLE/2))
-            _fenetreInfoCase->move((C + 2)*35, L*35);
-        else if((L < L_GRILLE/2) && (C >= C_GRILLE/2))
-            _fenetreInfoCase->move((C - 1)*35 - _fenetreInfoCase->width(), L*35);
-        else if((L >= L_GRILLE/2) && (C < C_GRILLE/2))
-            _fenetreInfoCase->move((C + 2)*35, L*35 - _fenetreInfoCase->height());
-        else if((L >= L_GRILLE/2) && (C >= C_GRILLE/2))
-            _fenetreInfoCase->move((C - 1)*35 - _fenetreInfoCase->width(), L*35 - _fenetreInfoCase->height());
-
-        std::stringstream ss;
-        ss << "CASE " << '(' << std::to_string(L) << ',' << std::to_string(C) << ')';
-        _fenetreInfoCase->set_coordCase(ss.str());
-        ss.clear();
-        ss.str(std::string());
-        ss << plateau[L][C].get_revetement();
-        _fenetreInfoCase->set_revCase(ss.str());
-        ss.clear();
-        ss.str(std::string());
-        if(plateau[L][C].get_en_feu())
-            ss << "En feu";
-        else
-            ss << "Pas en feu";
-        _fenetreInfoCase->set_statusCase(ss.str());
-        ss.clear();
-        ss.str(std::string());
-        ss << "Intensité du feu : " << std::to_string( plateau[L][C].get_fire());
-        _fenetreInfoCase->set_intensiteFeuCase(ss.str());
-        _fenetreInfoCase->clear();
-        std::vector<Civil*> v = plateau[L][C].get_personnages();
-
-        for(auto it = v.begin(); it != v.end(); it++){
-            QListItemPersonnage *item = new QListItemPersonnage(*it, _fenetreInfoCase->get_list());
-            _fenetreInfoCase->addItem(item);
-        }
-        emit displayInfo();
+    Pompier *p;
+    p = static_cast<Pompier*>(currentlySelected.first);
+    if(flag_conduire){
+        conduire(L,C);
+        cleanPossibilities();
     }
     else if(flag_deplacement){
         if(_imgAction[L][C]->isVisible()){
             deplacer_personnage(currentlySelected.first->get_pos(), C, L, &currentlySelected);
             flag_deplacement = false;
-            if(Pompier *p = static_cast<Pompier*>(currentlySelected.first)){
+            _monterVehicule->setVisible(false);
+            if(p != NULL)
                 p->set_deplacementEffectue(true);
-                if(p->get_arrosageEffectue() && p->get_deplacementEffectue())
-                    currentlySelected.second->setPixmap(QApplication::applicationDirPath() + "/../../../pompier_deplacement.png");
-            }
             cleanPossibilities();
         }
     }
     else if(flag_arroser){
-        if(_imgAction[L][C]->isVisible() && plateau[L][C].get_en_feu()){
-            Pompier* p = dynamic_cast<Pompier*>(currentlySelected.first);
-            p->set_arrosageEffectue(true);
-            int n = 1;
-            for(int i = L - 1; i <= L + 1; i ++){
-                for(int j = C - 1 + n; j <= C + 1 - n; j++){
-                    if(j == p->get_pos()[0] && i == p->get_pos()[1])
-                        continue;
-                    if(plateau[i][j].get_en_feu()){
-                        plateau[i][j].set_fire(plateau[L][C].get_fire() - p->get_recip()->get_puissance());
-
-                        if(plateau[i][j].get_fire() <= 0){
-                            _imgFeu[i][j]->setPixmap(QApplication::applicationDirPath() + "/../../../cendre.png");
-                            turn_off_fire(i, j);
-                        }
-                    }
-                }
-                if(i < L)
-                    n--;
-                else
-                    n++;
-            }
-            p->get_recip()->decrement_contenuRestant();
-            cleanPossibilities();
-            if(p->get_arrosageEffectue() && p->get_deplacementEffectue())
-                currentlySelected.second->setPixmap(QApplication::applicationDirPath() + "/../../../pompier_deplacement.png");
-        }
+        arroser(L,C,p);
     }
+    else if(flag_monterVehicule){
+        if(_imgAction[L][C]->isVisible() && !plateau[L][C].get_vehicules().empty() && (plateau[L][C].get_vehicules()[0]->get_passagers().size() < plateau[L][C].get_vehicules()[0]->get_capaciteMax())){
+            deplacer_personnage(currentlySelected.first->get_pos(), C, L, &currentlySelected);
+            p->set_dansUnVehicule(true);
+            plateau[L][C].get_vehicules()[0]->ajouterPassager(p);
+            p->set_arrosageEffectue(true);
+            p->set_deplacementEffectue(true);
+        }
+        cleanPossibilities();
+    }
+    if(p != NULL && p->get_arrosageEffectue() && p->get_deplacementEffectue()){
+        if(dynamic_cast<PompierEnChef*>(currentlySelected.first))
+            currentlySelected.second->setPixmap(QApplication::applicationDirPath() + "/imagesFolder/pompier_en_chef_fini.png");
+        else
+            currentlySelected.second->setPixmap(QApplication::applicationDirPath() + "/imagesFolder/pompier_fini.png");
+    }
+    fillFenetreInfoCase(L,C);
+    emit displayInfo();
 }
 
 void Grille::gameStart(){
+    nbTour = 0;
     _start->setVisible(false);
     _nextTurn->setVisible(true);
     _nbCivil->setVisible(true);
     _nbPompier->setVisible(true);
+    _afficherRegles->setVisible(false);
 
     // Initialisation des cases en feu
-    while(Grille::cases_en_feu.size() != DEPART_FEU_START){
-        int x_alea = rand() % 40;
-        int y_alea = rand() % 10;
-        if(plateau[y_alea][x_alea].get_revetement() == NSRevetement::eau || plateau[y_alea][x_alea].get_en_feu())
-            continue;
-        turn_on_fire(y_alea, x_alea);
-    }
-    _nbFeu->setText(QString::fromStdString(std::to_string(cases_en_feu.size())));
-    _nbFeu->setVisible(true);
+    initCaseFeu();
 
     // Initialisation des civils
-    for(auto it = _civilList.begin(); it != _civilList.end(); it++){
-        int x_alea;
-        int y_alea;
-        do{
-            x_alea = rand() % 30;
-            y_alea = (rand() % 13) + 9;
-        }while(plateau[y_alea][x_alea].get_revetement() == NSRevetement::eau || plateau[y_alea][x_alea].get_en_feu());
-        it->first->set_pos(x_alea, y_alea);
-        plateau[y_alea][x_alea].ajouterPersonnage(it->first);
-        it->second->move(x_alea*35, y_alea*35);
-        it->second->setVisible(true);
-    }
+    initCivils();
 
     // Initialisation des pompiers
-    for(auto it = _pompierList.begin(); it != _pompierList.end(); it++){
-        int x_alea;
-        int y_alea;
-        do{
-            x_alea = (rand() % 8) + 22;
-            y_alea = (rand() % 6) + 11;
-        }while(plateau[y_alea][x_alea].get_revetement() == NSRevetement::eau || plateau[y_alea][x_alea].get_en_feu());
-        it->first->set_pos(x_alea, y_alea);
-        plateau[y_alea][x_alea].ajouterPersonnage(it->first);
-        it->second->move(x_alea*35, y_alea*35);
-        it->second->setVisible(true);
-    }
+    initPompiers();
+
+    // Initialisation des véhicules
+    initVehicules();
 }
 
 void Grille::tourSuivant(){
+    nbTour++;
     propagation();
+    for(auto &it : _vehiculeList){
+        it.first->set_deplacementEffectue(false);
+        if(plateau[it.first->get_pos()[1]][it.first->get_pos()[0]].get_en_feu() && it.second->isVisible()){
+            it.second->setVisible(false);
+            plateau[it.first->get_pos()[1]][it.first->get_pos()[0]].supprimerVehicule(it.first);
+            for(auto &it2 : it.first->get_passagers())
+                it2->set_pdv(1);
+        }
+    }
     baisse_pdv();
     if(nbCivilMort != DEPART_CIVIL)
         deplacement_civils();
@@ -481,12 +329,17 @@ void Grille::tourSuivant(){
         if(it.first->get_pdv() <= 0)
             continue;
         it.first->set_deplacementEffectue(false);
-        it.first->set_arrosageEffectue(false);
-        it.second->setPixmap(QApplication::applicationDirPath() + "/../../../pompier.png");
+        if(it.first->get_recip()->get_contenuRestant() != 0)
+            it.first->set_arrosageEffectue(false);
+        it.second->setPixmap(QApplication::applicationDirPath() + "/imagesFolder/pompier.png");
+        if(dynamic_cast<PompierEnChef*>(it.first))
+            it.second->setPixmap(QApplication::applicationDirPath() + "/imagesFolder/pompier_en_chef.png");
     }
-
+    if(nbCivilMort == DEPART_CIVIL || nbPompier == 0 || (nbCaseBrule + cases_en_feu.size() == 808))
+        msgPerdu();
+    else if(cases_en_feu.empty())
+        msgGagne();
 }
-
 
 void Grille::deplacement_civils(void){
     for(auto it = _civilList.begin(); it != _civilList.end(); it++){
@@ -527,6 +380,13 @@ void Grille::deplacer_personnage(std::vector<int> former_pos, int new_x, int new
     c->second->move(new_x*35, new_y*35);
 }
 
+void Grille::deplacer_vehicule(std::vector<int> former_pos, int new_x, int new_y, std::pair<Vehicule*, ClickableLabel*> *c){
+    plateau[former_pos[1]][former_pos[0]].supprimerVehicule(c->first);
+    plateau[new_y][new_x].ajouterVehicule(c->first);
+    c->first->set_pos(new_x, new_y);
+    c->second->move(new_x*35, new_y*35);
+}
+
 void Grille::baisse_pdv(){
     for(auto it = _civilList.begin(); it != _civilList.end(); it++){
         if(it->first->get_pdv() == 0)
@@ -553,36 +413,44 @@ void Grille::baisse_pdv(){
     _nbPompier->setText(QString::fromStdString(std::to_string(nbPompier)));
 }
 
-
 void Grille::displayActions(QListWidgetItem *item){
     cleanPossibilities();
-    if(QListItemPersonnage *item_tmp = dynamic_cast<QListItemPersonnage*>(item))
+    _nextTurn->setVisible(false);
+    if(QListItemPersonnage *item_tmp = dynamic_cast<QListItemPersonnage*>(item)){
         if(Pompier *p = dynamic_cast<Pompier*>(item_tmp->get_civil())){
-            _nextTurn->setVisible(false);
             for(auto &it : _pompierList){
-                if(it.first->get_name().compare(p->get_name()) == 0){
+                if(it.first == p){
                     currentlySelected.first = it.first;
                     currentlySelected.second = it.second;
+                    break;
                 }
             }
-            if(!p->get_arrosageEffectue()){
-                _arroser->setVisible(true);
-            }
-            if(!p->get_deplacementEffectue()){
-                flag_deplacement = true;
-                displayPossibilities(p->get_pos(), p->get_pdm());
+            displayActionsPersonnages(p);
+        }
+    }
+    else if(QListItemVehicule *item_tmp = dynamic_cast<QListItemVehicule*>(item)){
+        Vehicule* v = item_tmp->get_vehicule();
+        for(const auto &it : _vehiculeList){
+            if(it.first == v){
+                currentlySelectedVehicule = it;
+                break;
             }
         }
+        displayActionsVehicules(v);
+    }
 }
 
-void Grille::displayPossibilities(std::vector<int> pos, int portee){
+void Grille::displayPossibilities(std::vector<int> pos, int portee, bool vehicule){
     int n = portee;
-    for(int i = (pos[1] - portee + 1); i < (pos[1] + portee); i++){
+    for(int i = (pos[1] - portee); i <= (pos[1] + portee); i++){
         for(int j = (pos[0] - portee + n); j < (pos[0] + portee - n + 1); j++){
             if(i == pos[1] && j == pos[0])
                 continue;
-            else if(i >= 0 && i < L_GRILLE && j >= 0 && j < C_GRILLE && plateau[i][j].get_revetement() != NSRevetement::eau)
+            else if(i >= 0 && i < L_GRILLE && j >= 0 && j < C_GRILLE && plateau[i][j].get_revetement() != NSRevetement::eau){
+                if(vehicule)
+                    _imgAction[i][j]->setPixmap(QApplication::applicationDirPath() + "/imagesFolder/action_vehicule.png");
                 _imgAction[i][j]->setVisible(true);
+            }
         }
         if(i < pos[1])
             n--;
@@ -594,17 +462,23 @@ void Grille::displayPossibilities(std::vector<int> pos, int portee){
 void Grille::cleanPossibilities(void){
     flag_arroser = false;
     flag_deplacement = false;
+    flag_monterVehicule = false;
+    flag_conduire = false;
     _arroser->setVisible(false);
+    _monterVehicule->setVisible(false);
+    _descendreVehicule->setVisible(false);
+    _remplir->setVisible(false);
     for(auto &it : _imgAction){
         for(auto &it2 : it){
             it2->setVisible(false);
+            it2->setPixmap(QApplication::applicationDirPath() + "/imagesFolder/action.png");
         }
     }
 }
 
-
 void Grille::displayNextTurn(){
-    _nextTurn->setVisible(true);
+    if(nbTour >= 0)
+        _nextTurn->setVisible(true);
 }
 
 void Grille::afficherPorteeArrosage(){
@@ -612,5 +486,515 @@ void Grille::afficherPorteeArrosage(){
     _arroser->setVisible(false);
     flag_arroser = true;
     flag_deplacement = false;
-    displayPossibilities(currentlySelected.first->get_pos(), dynamic_cast<Pompier*>(currentlySelected.first)->get_recip()->get_portee());
+    displayPossibilities(currentlySelected.first->get_pos(), dynamic_cast<Pompier*>(currentlySelected.first)->get_recip()->get_portee(), false);
+}
+
+void Grille::monterVehiculePressed(void){
+    flag_monterVehicule = true;
+    flag_arroser = false;
+    flag_deplacement = false;
+    _arroser->setVisible(false);
+    _monterVehicule->setVisible(false);
+    displayPossibilities(currentlySelected.first->get_pos(), dynamic_cast<Pompier*>(currentlySelected.first)->get_pdm(), true);
+}
+
+void Grille::descendreVehiculePressed(void){
+    _descendreVehicule->setVisible(false);
+    flag_deplacement = true;
+    dynamic_cast<Pompier*>(currentlySelected.first)->set_dansUnVehicule(false);
+    plateau[currentlySelected.first->get_pos()[1]][currentlySelected.first->get_pos()[0]].get_vehicules()[0]->supprimerPassager(dynamic_cast<Pompier*>(currentlySelected.first));
+    displayPossibilities(currentlySelected.first->get_pos(), dynamic_cast<Pompier*>(currentlySelected.first)->get_pdm(), false);
+}
+
+void Grille::conduirePressed(void){
+    _conduire->setVisible(false);
+    _nextTurn->setVisible(false);
+    displayPossibilities(currentlySelectedVehicule.first->get_pos(), currentlySelectedVehicule.first->get_deplacementMax(), false);
+    flag_conduire = true;
+}
+
+void Grille::remplirPressed(void){
+    _remplir->setVisible(false);
+    dynamic_cast<Pompier*>(currentlySelected.first)->get_recip()->set_contenuRestant(dynamic_cast<Pompier*>(currentlySelected.first)->get_recip()->get_contenuMax());
+    fillFenetreInfoCase(currentlySelected.first->get_pos()[1], currentlySelected.first->get_pos()[0]);
+    emit displayInfo();
+}
+
+void Grille::fillFenetreInfoCase(int L, int C){
+    if((C < C_GRILLE/2))
+        _fenetreInfoCase->move(3*(_map->width()/4) - _fenetreInfoCase->width()/2, _map->height()/2 - _fenetreInfoCase->height()/2);
+    else if(C >= C_GRILLE/2)
+        _fenetreInfoCase->move(_map->width()/4 - _fenetreInfoCase->width()/2, _map->height()/2 - _fenetreInfoCase->height()/2);
+
+    std::stringstream ss;
+    ss << "CASE " << '(' << std::to_string(L) << ',' << std::to_string(C) << ')';
+    _fenetreInfoCase->set_coordCase(ss.str());
+    ss.clear();
+    ss.str(std::string());
+    ss << plateau[L][C].get_revetement();
+    _fenetreInfoCase->set_revCase(ss.str());
+    ss.clear();
+    ss.str(std::string());
+    if(plateau[L][C].get_en_feu())
+        ss << "En feu";
+    else
+        ss << "Pas en feu";
+    _fenetreInfoCase->set_statusCase(ss.str());
+    ss.clear();
+    ss.str(std::string());
+    ss << "Intensité du feu : " << std::to_string( plateau[L][C].get_fire());
+    _fenetreInfoCase->set_intensiteFeuCase(ss.str());
+    _fenetreInfoCase->clear();
+    std::vector<Civil*> v_c = plateau[L][C].get_personnages();
+    for(std::vector<Civil*>::iterator it = v_c.begin(); it != v_c.end(); it++){
+        if((*it)->get_pdv() <= 0)
+            continue;
+        if(Pompier *p_tmp = dynamic_cast<Pompier*>(*it)){
+            if(p_tmp->get_dansUnVehicule())
+                    continue;
+        }
+        QListItemPersonnage *item = new QListItemPersonnage(*it, _fenetreInfoCase->get_list());
+        _fenetreInfoCase->addItem(item);
+    }
+    std::vector<Vehicule*> v_v = plateau[L][C].get_vehicules();
+    for(std::vector<Vehicule*>::iterator it = v_v.begin(); it != v_v.end(); it++){
+        QListItemVehicule *item = new QListItemVehicule(*it, _fenetreInfoCase->get_list());
+        _fenetreInfoCase->addItem(item);
+        std::vector<Pompier*> v_p = (*it)->get_passagers();
+        if(!v_p.empty())
+        {
+            for(std::vector<Pompier*>::iterator it2 = v_p.begin(); it2 != v_p.end(); it2++){
+                QListItemPersonnage *item_2 = new QListItemPersonnage(*it2, _fenetreInfoCase->get_list());
+                QFont font = item_2->font();
+                font.setItalic(true);
+                item_2->setFont(font);
+                _fenetreInfoCase->addItem(item_2);
+            }
+        }
+    }
+}
+
+void Grille::initCaseFeu(void){
+    while(Grille::cases_en_feu.size() != DEPART_FEU_START){
+        int x_alea = rand() % 40;
+        int y_alea = rand() % 10;
+        if(plateau[y_alea][x_alea].get_revetement() == NSRevetement::eau || plateau[y_alea][x_alea].get_en_feu())
+            continue;
+        turn_on_fire(y_alea, x_alea);
+    }
+    _nbFeu->setText(QString::fromStdString(std::to_string(cases_en_feu.size())));
+    _nbFeu->setVisible(true);
+}
+
+void Grille::initCivils(void){
+    for(auto it = _civilList.begin(); it != _civilList.end(); it++){
+        int x_alea;
+        int y_alea;
+        do{
+            x_alea = rand() % 30;
+            y_alea = (rand() % 13) + 9;
+        }while(plateau[y_alea][x_alea].get_revetement() == NSRevetement::eau || plateau[y_alea][x_alea].get_en_feu());
+        it->first->set_pos(x_alea, y_alea);
+        plateau[y_alea][x_alea].ajouterPersonnage(it->first);
+        it->second->move(x_alea*35, y_alea*35);
+        it->second->setVisible(true);
+    }
+}
+
+void Grille::initPompiers(void){
+    for(auto it = _pompierList.begin(); it != _pompierList.end(); it++){
+        int x_alea;
+        int y_alea;
+        do{
+            x_alea = (rand() % 8) + 22;
+            y_alea = (rand() % 6) + 11;
+        }while(plateau[y_alea][x_alea].get_revetement() == NSRevetement::eau || plateau[y_alea][x_alea].get_en_feu());
+        it->first->set_pos(x_alea, y_alea);
+        plateau[y_alea][x_alea].ajouterPersonnage(it->first);
+        it->second->move(x_alea*35, y_alea*35);
+        it->second->setVisible(true);
+    }
+}
+
+void Grille::initVehicules(void){
+    _vehiculeList[0].second->move(23*35, 18*35);
+    _vehiculeList[0].first->set_pos(23, 18);
+    _vehiculeList[0].second->setVisible(true);
+    plateau[18][23].ajouterVehicule(_vehiculeList[0].first);
+    _vehiculeList[1].second->move(24*35, 18*35);
+    _vehiculeList[1].first->set_pos(24, 18);
+    _vehiculeList[1].second->setVisible(true);
+    plateau[18][24].ajouterVehicule(_vehiculeList[1].first);
+    _vehiculeList[2].second->move(22*35, 18*35);
+    _vehiculeList[2].first->set_pos(22, 18);
+    _vehiculeList[2].second->setVisible(true);
+    plateau[18][22].ajouterVehicule(_vehiculeList[2].first);
+}
+
+void Grille::initBoutons(void){
+    // Bouton START
+    _start = new QPushButton("START", this);
+    _start->move(this->frameSize().width()/2 - _start->frameSize().width()/2, 780);
+
+    // Bouton Afficher Règles
+    _afficherRegles = new QPushButton("REGLES DU JEU", this);
+    _afficherRegles->move(this->width()/2 - 2*_start->width(), 780);
+
+    // Bouton TOUR SUIVANT
+    _nextTurn = new QPushButton("Tour Suivant", this);
+    _nextTurn->move(this->frameSize().width()/2 - _nextTurn->frameSize().width()/2, 780);
+    _nextTurn->setVisible(false);
+
+    // Bouton ARROSER
+    _arroser = new QPushButton("ARROSER", this);
+    _arroser->move(this->frameSize().width()/4 - _arroser->frameSize().width()/2, 780);
+    _arroser->setVisible(false);
+
+    // Bouton MONTER VEHICULE
+    _monterVehicule = new QPushButton("Monter dans un véhicule", this);
+    _monterVehicule->move(this->frameSize().width()/2 - _monterVehicule->frameSize().width()/2, 780);
+    _monterVehicule->setVisible(false);
+
+    // Bouton DESCENDRE VEHICULE
+    _descendreVehicule = new QPushButton("Descendre du véhicule", this);
+    _descendreVehicule->move(this->frameSize().width()/2 - _descendreVehicule->frameSize().width()/2, 780);
+    _descendreVehicule->setVisible(false);
+
+    // Bouton CONDUIRE
+    _conduire = new QPushButton("CONDUIRE", this);
+    _conduire->move(this->frameSize().width()/3 - _conduire->frameSize().width()/2, 780);
+    _conduire->setVisible(false);
+
+    // Bouton REMPLIR
+    _remplir = new QPushButton("REMPLIR", this);
+    _remplir->move(this->frameSize().width()/3 - _remplir->frameSize().width()/2, 780);
+    _remplir->setVisible(false);
+}
+
+void Grille::initSymboles(void){
+    // Symboles FEU non affichés
+    for(int j = 0; j < L_GRILLE; j++){
+        for(int k = 0; k < C_GRILLE; k++){
+            ClickableLabel *imgFeu = new ClickableLabel(this);
+            imgFeu->setPixmap(QPixmap(QApplication::applicationDirPath() + "/imagesFolder/feu.png"));
+            imgFeu->setGeometry(k*35, j*35, 35, 35);
+            imgFeu->setVisible(false);
+            _imgFeu[j].push_back(imgFeu);
+            QObject::connect(imgFeu, SIGNAL(clickedImg(int, int)), this, SLOT(boxClicked(int, int)));
+        }
+    }
+
+    // Symboles 'ACTION' non affichés
+    for(int j = 0; j < L_GRILLE; j++){
+        for(int k = 0; k < C_GRILLE; k++){
+            ClickableLabel *imgAction = new ClickableLabel(this);
+            imgAction->setPixmap(QPixmap(QApplication::applicationDirPath() + "/imagesFolder/action.png"));
+            imgAction->setGeometry(k*35, j*35, 35, 35);
+            imgAction->setVisible(false);
+            _imgAction[j].push_back(imgAction);
+            QObject::connect(imgAction, SIGNAL(clickedImg(int, int)), this, SLOT(boxClicked(int, int)));
+        }
+    }
+}
+
+void Grille::initListes(void){
+    // Affichage caché des civils
+    for(auto &it : _civilList){
+        ClickableLabel *nCivil = new ClickableLabel(this);
+        nCivil->setPixmap(QPixmap(QApplication::applicationDirPath() + "/imagesFolder/civil.png"));
+        nCivil->setVisible(false);
+        it.first = new Civil;
+        it.second = nCivil;
+        QObject::connect(nCivil, SIGNAL(clickedImg(int, int)), this, SLOT(boxClicked(int, int)));
+    }
+
+    // Affichage caché des pompiers
+    int n = 0;
+    for(auto &it : _pompierList){
+        ClickableLabel *nPompier = new ClickableLabel(this);
+        if(n == 0 || n == 1 || n == 2){
+            nPompier->setPixmap(QPixmap(QApplication::applicationDirPath() + "/imagesFolder/pompier.png"));
+            it.first = new Pompier;
+        }
+        else if(n == 3 || n == 4){
+            it.first = new PompierEnChef;
+            nPompier->setPixmap(QPixmap(QApplication::applicationDirPath() + "/imagesFolder/pompier_en_chef.png"));
+        }
+        else
+        {
+            nPompier->setPixmap(QPixmap(QApplication::applicationDirPath() + "/imagesFolder/pompier.png"));
+            it.first = new Pompier(new Extincteur);
+        }
+
+        nPompier->setVisible(false);
+        it.second = nPompier;
+        QObject::connect(nPompier, SIGNAL(clickedImg(int, int)), this, SLOT(boxClicked(int, int)));
+        n++;
+    }
+
+    // Affichage caché des véhicules
+    int k = 0;
+    for(auto &it : _vehiculeList){
+        ClickableLabel *nVehicule = new ClickableLabel(this);
+        if(k == 0){
+             it.first = new Camion();
+             nVehicule->setPixmap(QPixmap(QApplication::applicationDirPath() + "/imagesFolder/camion.png"));
+        }
+        else{
+            it.first = new Mobylette();
+            nVehicule->setPixmap(QPixmap(QApplication::applicationDirPath() + "/imagesFolder/mobylette.png"));
+        }
+        nVehicule->setVisible(false);
+        it.second = nVehicule;
+        QObject::connect(nVehicule, SIGNAL(clickedImg(int, int)), this, SLOT(boxClicked(int, int)));
+        k++;
+    }
+}
+
+void Grille::affichageNombres(void){
+    // Affichage nombre de civils
+    QLabel *blackRect = new QLabel(this);
+    QLabel *logoCivil = new QLabel(this);
+    _nbCivil = new QLabel(this);
+    QFont font = _nbCivil->font();
+    font.setPixelSize(26);
+    _nbCivil->setFont(font);
+    _nbCivil->setText(QString::fromStdString(std::to_string(DEPART_CIVIL - nbCivilMort)));
+    blackRect->setPixmap(QApplication::applicationDirPath() + "/imagesFolder/blackRect.png");
+    logoCivil->setPixmap(QApplication::applicationDirPath() + "/imagesFolder/civil.png");
+    _nbCivil->move(1050, 780);
+    blackRect->move(1000, 777);
+    logoCivil->move(1000, 777);
+    _nbCivil->setVisible(false);
+
+    // Affichage nombre de cases en feu
+    QLabel *blackRect2 = new QLabel(this);
+    QLabel *logoFeu = new QLabel(this);
+    _nbFeu = new QLabel(this);
+    _nbFeu->setFixedSize(100, _nbFeu->height());
+    _nbFeu->setFont(font);
+    blackRect2->setPixmap(QApplication::applicationDirPath() + "/imagesFolder/blackRect.png");
+    logoFeu->setPixmap(QApplication::applicationDirPath() + "/imagesFolder/feu.png");
+    _nbFeu->move(1150, 780);
+    logoFeu->move(1100, 777);
+    _nbFeu->setVisible(false);
+
+    // Affichage nombre de pompier
+    QLabel *logoPompier = new QLabel(this);
+    _nbPompier = new QLabel(QString::fromStdString(std::to_string(nbPompier)), this);
+    _nbPompier->setFixedSize(100, _nbPompier->height());
+    _nbPompier->setFont(font);
+    logoPompier->setPixmap(QApplication::applicationDirPath() + "/imagesFolder/pompier.png");
+    _nbPompier->move(1250, 780);
+    blackRect2->move(1200, 777);
+    logoPompier->move(1200, 777);
+    _nbPompier->setVisible(false);
+
+}
+
+void Grille::connexionSignaux(void){
+    // Connexion des signaux et slots
+    QObject::connect(_map, SIGNAL(clicked(int, int)), this, SLOT(boxClicked(int, int)));
+    QObject::connect(_start, SIGNAL(clicked()), this, SLOT(gameStart()));
+    QObject::connect(_nextTurn, SIGNAL(clicked()), this, SLOT(tourSuivant()));
+    QObject::connect(this, SIGNAL(displayInfo()), _fenetreInfoCase, SLOT(show()));
+    QObject::connect(_fenetreInfoCase->get_list(), SIGNAL(itemClicked(QListWidgetItem *)), this, SLOT(displayActions(QListWidgetItem *)));
+    QObject::connect(_fenetreInfoCase, SIGNAL(close()), this, SLOT(cleanPossibilities()));
+    QObject::connect(_fenetreInfoCase, SIGNAL(close()), this, SLOT(displayNextTurn()));
+    QObject::connect(_arroser, SIGNAL(clicked()), this, SLOT(afficherPorteeArrosage()));
+    QObject::connect(_monterVehicule, SIGNAL(clicked()), this, SLOT(monterVehiculePressed()));
+    QObject::connect(_descendreVehicule, SIGNAL(clicked()), this, SLOT(descendreVehiculePressed()));
+    QObject::connect(_conduire, SIGNAL(clicked()), this, SLOT(conduirePressed()));
+    QObject::connect(_remplir, SIGNAL(clicked()), this, SLOT(remplirPressed()));
+    QObject::connect(this, SIGNAL(showMsg()), _msg, SLOT(exec()));
+    QObject::connect(_msg, SIGNAL(quitter()), this, SLOT(quitter()));
+    QObject::connect(_msg, SIGNAL(rejouer()), this, SLOT(rejouer()));
+    QObject::connect(_afficherRegles, SIGNAL(clicked()), _regles, SLOT(exec()));
+    QObject::connect(_regles, SIGNAL(resize(int)), this, SLOT(resizeRegle(int)));
+}
+
+void Grille::conduire(int L, int C){
+    if(_imgAction[L][C]->isVisible()){
+        deplacer_vehicule(currentlySelectedVehicule.first->get_pos(), C, L, &currentlySelectedVehicule);
+        currentlySelectedVehicule.first->set_deplacementEffectue(true);
+        for(const auto &it : currentlySelectedVehicule.first->get_passagers()){
+            for(const auto &it2 : _pompierList){
+                if(it2.first == it){
+                    std::pair<Civil*, ClickableLabel*> tmp;
+                    tmp.first = dynamic_cast<Civil*>(it);
+                    tmp.second = it2.second;
+                    deplacer_personnage(it->get_pos(), C, L, &tmp);
+                }
+            }
+        }
+    }
+}
+
+void Grille::arroser(int L, int C, Pompier* p){
+    if(_imgAction[L][C]->isVisible() && plateau[L][C].get_en_feu()){
+        p->set_arrosageEffectue(true);
+        int n = 1;
+        for(int i = L - 1; i <= L + 1; i ++){
+            for(int j = C - 1 + n; j <= C + 1 - n; j++){
+                if(j == p->get_pos()[0] && i == p->get_pos()[1])
+                    continue;
+                if(i < 0 || i >= L_GRILLE || j < 0 || j >= C_GRILLE)
+                    continue;
+                if(plateau[i][j].get_en_feu()){
+                    plateau[i][j].set_fire(plateau[i][j].get_fire() - p->get_recip()->get_puissance());
+
+                    if(plateau[i][j].get_fire() <= 0){
+                        _imgFeu[i][j]->setPixmap(QApplication::applicationDirPath() + "/imagesFolder/cendre.png");
+                        nbCaseBrule++;
+                        turn_off_fire(i, j);
+                        if(cases_en_feu.empty())
+                            msgGagne();
+                    }
+                }
+            }
+            if(i < L)
+                n--;
+            else
+                n++;
+        }
+        if(p->get_recip()->get_contenuRestant() != 0)
+            p->get_recip()->decrement_contenuRestant();
+        cleanPossibilities();
+    }
+}
+
+void Grille::afficherRemplir(Pompier* p){
+    if(dynamic_cast<Seau*>(p->get_recip())){
+        std::vector<int> pos_tmp = p->get_pos();
+        if(((pos_tmp[1] - 1 >= 0) && (plateau[pos_tmp[1] - 1][pos_tmp[0]].get_revetement() == NSRevetement::eau))
+                || ((pos_tmp[1] + 1 < L_GRILLE) && (plateau[pos_tmp[1] + 1][pos_tmp[0]].get_revetement() == NSRevetement::eau))
+                || ((pos_tmp[0] - 1 >= 0) && (plateau[pos_tmp[1]][pos_tmp[0] - 1].get_revetement() == NSRevetement::eau))
+                || ((pos_tmp[0] + 1 < C_GRILLE) && (plateau[pos_tmp[1]][pos_tmp[0] + 1].get_revetement() == NSRevetement::eau)))
+        {
+            _remplir->setVisible(true);
+        }
+    }
+    else if(dynamic_cast<Extincteur*>(p->get_recip())){
+        std::vector<int> pos_tmp = p->get_pos();
+        if(((pos_tmp[1] - 1 >= 0) && !plateau[pos_tmp[1] - 1][pos_tmp[0]].get_vehicules().empty())
+                || ((pos_tmp[1] + 1 < L_GRILLE) && !plateau[pos_tmp[1] + 1][pos_tmp[0]].get_vehicules().empty())
+                || ((pos_tmp[0] - 1 >= 0) && !plateau[pos_tmp[1]][pos_tmp[0] - 1].get_vehicules().empty())
+                || ((pos_tmp[0] + 1 < C_GRILLE) && !plateau[pos_tmp[1]][pos_tmp[0] + 1].get_vehicules().empty()))
+        {
+            _remplir->setVisible(true);
+        }
+    }
+}
+
+void Grille::displayActionsVehicules(Vehicule* v){
+    if(v->get_name().compare("Mobylette") == 0){
+        bool conducteur = false;
+        for(const auto &it : v->get_passagers()){
+            if(it->get_deplacementEffectue() == false){
+                conducteur = true;
+                break;
+            }
+        }
+        if(conducteur && !v->get_deplacementEffectue())
+            _conduire->setVisible(true);
+    }
+    else if(v->get_name().compare("Camion") == 0){
+        bool conducteur = false;
+        for(const auto &it : v->get_passagers()){
+            if(dynamic_cast<PompierEnChef*>(it)){
+                conducteur = true;
+                break;
+            }
+        }
+        if(conducteur && !v->get_deplacementEffectue())
+            _conduire->setVisible(true);
+    }
+}
+
+void Grille::displayActionsPersonnages(Pompier* p){
+    if(!p->get_dansUnVehicule() && (p->get_recip()->get_contenuRestant() < p->get_recip()->get_contenuMax())){
+        afficherRemplir(p);
+    }
+    if(!p->get_deplacementEffectue())
+        _monterVehicule->setVisible(true);
+    if(!p->get_arrosageEffectue()  && !p->get_dansUnVehicule()){
+        _arroser->setVisible(true);
+    }
+    if(!p->get_deplacementEffectue() && !p->get_dansUnVehicule()){
+        flag_deplacement = true;
+        displayPossibilities(p->get_pos(), p->get_pdm(), false);
+    }
+    if(p->get_dansUnVehicule() && !p->get_deplacementEffectue()){
+        _monterVehicule->setVisible(false);
+        _descendreVehicule->setVisible(true);
+    }
+}
+
+void Grille::msgPerdu(){
+    cleanPossibilities();
+    _msg->set_msgPrincipal("Vous avez perdu ...");
+    if(nbCivilMort == DEPART_CIVIL)
+        _msg->set_msgSecondaire("Vous n'avez pas réussi à sauver les civils");
+    else if(nbPompier == 0 || true)
+        _msg->set_msgSecondaire("Tous vos pompiers ne sont plus parmis nous");
+    else if(nbCaseBrule + cases_en_feu.size() == 808)
+        _msg->set_msgSecondaire("Le village est ravagé par les flammes !");
+    emit showMsg();
+}
+
+void Grille::msgGagne(){
+    cleanPossibilities();
+    _msg->set_msgPrincipal("Vous avez gagné !");
+    std::stringstream ss;
+    ss << "Vous avez sauvé " << (DEPART_CIVIL - nbCivilMort) << " civils" << std::endl << "Il vous reste " << nbPompier << " pompiers"<< std::endl << "En " << nbTour << " tours" << std::endl << "Avec " << nbCaseBrule << " cases brulées";
+    _msg->set_msgSecondaire(ss.str());
+    emit showMsg();
+}
+
+void Grille::quitter(void){
+    close();
+}
+
+void Grille::rejouer(void){
+    flag_rejouer = true;
+    cases_en_feu.clear();
+    Civil::cpt = 0;
+    Pompier::cpt = 0;
+    PompierEnChef::cpt = 0;
+    flag_deplacement = false;
+    flag_arroser = false;
+    flag_monterVehicule = false;
+    flag_conduire = false;
+    nbCivilMort = 0;
+    nbTour = 0;
+    nbCaseBrule = 0;
+    nbPompier = DEPART_POMPIER;
+    close();
+}
+
+void Grille::resizeRegle(int n){
+    switch(n){
+        case 0 :
+            _regles->setFixedSize(400,200);
+        break;
+        case 1 :
+            _regles->setFixedSize(1070,450);
+        break;
+        case 2 :
+            _regles->setFixedSize(1070,450);
+        break;
+        case 3 :
+            _regles->setFixedSize(750,600);
+        break;
+        case 4 :
+            _regles->setFixedSize(1200,700);
+        break;
+        case 5 :
+            _regles->setFixedSize(1070,700);
+        break;
+        case 6 :
+            _regles->setFixedSize(800,250);
+        break;
+    }
+    _regles->move((_map->width() - _regles->width())/2, (_map->height() - _regles->height())/2);
 }

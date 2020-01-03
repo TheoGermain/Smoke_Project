@@ -15,7 +15,6 @@ BoxDisplayInfo::BoxDisplayInfo(QWidget *parent) : QDialog(parent){
     _layout->addWidget(_contenu);
     _layout->addWidget(_list);
     this->setLayout(_layout);
-
 }
 
 BoxDisplayInfo::~BoxDisplayInfo(){}

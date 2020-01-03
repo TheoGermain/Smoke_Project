@@ -3,6 +3,7 @@
 #include <vector>
 #include <iostream>
 #include "Civil.hh"
+#include "Vehicule.hh"
 
 class Milieu{
 public :
@@ -20,14 +21,18 @@ public :
   NSRevetement::Revetement get_revetement() const;
   void ajouterPersonnage(Civil*);
   void supprimerPersonnage(const Civil*);
+  std::vector<Vehicule*> get_vehicules(void);
+  void ajouterVehicule(Vehicule*);
+  void supprimerVehicule(const Vehicule*);
 
   static std::map<NSRevetement::Revetement, int> map_coeff_propagation;
   static std::map<NSRevetement::Revetement, int> map_proba_feu;
 
 private :
-  NSRevetement::Revetement r;
+  NSRevetement::Revetement _r;
   bool en_feu;
-  std::vector<Civil*> personnages;
+  std::vector<Civil*> _personnages;
+  std::vector<Vehicule*> _vehicules;
   int degre_de_feu;
   void set_degre_de_feu();
 };

@@ -27,15 +27,15 @@ void Civil::set_pdv(int pdv){
     _pdv = pdv;
 }
 
-std::vector<int> Civil::get_pos(){
+std::vector<int> Civil::get_pos() const{
   return _pos;
 }
 
-int Civil::get_pdv(void){
+int Civil::get_pdv(void) const{
     return _pdv;
 }
 
-int Civil::get_pdm(void){
+int Civil::get_pdm(void) const{
     return _pdm;
 }
 
@@ -83,7 +83,7 @@ std::string Civil::get_name() const{
     return _name;
 }
 
-std::string Civil::toString(void){
+std::string Civil::toString(void) const{
     std::stringstream ss;
     ss << _name << "  " << "PV" <<  '(' << _pdv << ')';
     return ss.str();

@@ -56,23 +56,37 @@ SOURCES       = ../smokeProject/BoxDisplayInfo.cc \
 		../smokeProject/Civil.cc \
 		../smokeProject/Clickablelabel.cc \
 		../smokeProject/Grille.cc \
+		../smokeProject/MessageBox.cc \
 		../smokeProject/Milieu.cc \
 		../smokeProject/Pompier.cc \
+		../smokeProject/PompierEnChef.cc \
 		../smokeProject/QListItemPersonnage.cc \
+		../smokeProject/QListItemVehicule.cc \
+		../smokeProject/ReglesDuJeu.cc \
+		../smokeProject/Vehicule.cc \
 		../smokeProject/main.cc moc_BoxDisplayInfo.cpp \
 		moc_Clickablelabel.cpp \
-		moc_Grille.cpp
+		moc_Grille.cpp \
+		moc_MessageBox.cpp \
+		moc_ReglesDuJeu.cpp
 OBJECTS       = BoxDisplayInfo.o \
 		Civil.o \
 		Clickablelabel.o \
 		Grille.o \
+		MessageBox.o \
 		Milieu.o \
 		Pompier.o \
+		PompierEnChef.o \
 		QListItemPersonnage.o \
+		QListItemVehicule.o \
+		ReglesDuJeu.o \
+		Vehicule.o \
 		main.o \
 		moc_BoxDisplayInfo.o \
 		moc_Clickablelabel.o \
-		moc_Grille.o
+		moc_Grille.o \
+		moc_MessageBox.o \
+		moc_ReglesDuJeu.o
 DIST          = /Users/theo/Qt/5.12.6/clang_64/mkspecs/features/spec_pre.prf \
 		/Users/theo/Qt/5.12.6/clang_64/mkspecs/qdevice.pri \
 		/Users/theo/Qt/5.12.6/clang_64/mkspecs/features/device_config.prf \
@@ -249,17 +263,27 @@ DIST          = /Users/theo/Qt/5.12.6/clang_64/mkspecs/features/spec_pre.prf \
 		../smokeProject/Civil.hh \
 		../smokeProject/Clickablelabel.hh \
 		../smokeProject/Grille.hh \
+		../smokeProject/MessageBox.hh \
 		../smokeProject/Milieu.hh \
 		../smokeProject/Pompier.hh \
+		../smokeProject/PompierEnChef.hh \
 		../smokeProject/QListItemPersonnage.hh \
+		../smokeProject/QListItemVehicule.hh \
 		../smokeProject/Recipient.hh \
-		../smokeProject/Revetement.hh ../smokeProject/BoxDisplayInfo.cc \
+		../smokeProject/ReglesDuJeu.hh \
+		../smokeProject/Revetement.hh \
+		../smokeProject/Vehicule.hh ../smokeProject/BoxDisplayInfo.cc \
 		../smokeProject/Civil.cc \
 		../smokeProject/Clickablelabel.cc \
 		../smokeProject/Grille.cc \
+		../smokeProject/MessageBox.cc \
 		../smokeProject/Milieu.cc \
 		../smokeProject/Pompier.cc \
+		../smokeProject/PompierEnChef.cc \
 		../smokeProject/QListItemPersonnage.cc \
+		../smokeProject/QListItemVehicule.cc \
+		../smokeProject/ReglesDuJeu.cc \
+		../smokeProject/Vehicule.cc \
 		../smokeProject/main.cc
 QMAKE_TARGET  = smokeProject
 DESTDIR       = 
@@ -652,12 +676,22 @@ smokeProject.app/Contents/Resources/empty.lproj:
 smokeProject.app/Contents/Info.plist: 
 	@test -d smokeProject.app/Contents || mkdir -p smokeProject.app/Contents
 	@$(DEL_FILE) smokeProject.app/Contents/Info.plist
-	@sed -e "s,@SHORT_VERSION@,1.0,g" -e "s,\$${QMAKE_SHORT_VERSION},1.0,g" -e "s,@FULL_VERSION@,1.0.0,g" -e "s,\$${QMAKE_FULL_VERSION},1.0.0,g" -e "s,@TYPEINFO@,????,g" -e "s,\$${QMAKE_PKGINFO_TYPEINFO},????,g" -e "s,@BUNDLEIDENTIFIER@,001.smokeProject,g" -e "s,\$${PRODUCT_BUNDLE_IDENTIFIER},001.smokeProject,g" -e "s,\$${MACOSX_DEPLOYMENT_TARGET},10.12,g" -e "s,\$${IPHONEOS_DEPLOYMENT_TARGET},,g" -e "s,\$${TVOS_DEPLOYMENT_TARGET},,g" -e "s,\$${WATCHOS_DEPLOYMENT_TARGET},,g" -e "s,@ICON@,,g" -e "s,\$${ASSETCATALOG_COMPILER_APPICON_NAME},,g" -e "s,@EXECUTABLE@,smokeProject,g" -e "s,@LIBRARY@,smokeProject,g" -e "s,\$${EXECUTABLE_NAME},smokeProject,g" -e "s,@TYPEINFO@,????,g" -e "s,\$${QMAKE_PKGINFO_TYPEINFO},????,g" /Users/theo/Qt/5.12.6/clang_64/mkspecs/macx-clang/Info.plist.app >smokeProject.app/Contents/Info.plist
+	@sed -e "s,@SHORT_VERSION@,1.0,g" -e "s,\$${QMAKE_SHORT_VERSION},1.0,g" -e "s,@FULL_VERSION@,1.0.0,g" -e "s,\$${QMAKE_FULL_VERSION},1.0.0,g" -e "s,@TYPEINFO@,????,g" -e "s,\$${QMAKE_PKGINFO_TYPEINFO},????,g" -e "s,@BUNDLEIDENTIFIER@,001.smokeProject,g" -e "s,\$${PRODUCT_BUNDLE_IDENTIFIER},001.smokeProject,g" -e "s,\$${MACOSX_DEPLOYMENT_TARGET},10.12,g" -e "s,\$${IPHONEOS_DEPLOYMENT_TARGET},,g" -e "s,\$${TVOS_DEPLOYMENT_TARGET},,g" -e "s,\$${WATCHOS_DEPLOYMENT_TARGET},,g" -e "s,@ICON@,myIcon.icns,g" -e "s,\$${ASSETCATALOG_COMPILER_APPICON_NAME},myIcon.icns,g" -e "s,@EXECUTABLE@,smokeProject,g" -e "s,@LIBRARY@,smokeProject,g" -e "s,\$${EXECUTABLE_NAME},smokeProject,g" -e "s,@TYPEINFO@,????,g" -e "s,\$${QMAKE_PKGINFO_TYPEINFO},????,g" /Users/theo/Qt/5.12.6/clang_64/mkspecs/macx-clang/Info.plist.app >smokeProject.app/Contents/Info.plist
+smokeProject.app/Contents/Resources/myIcon.icns: ../smokeProject/myIcon.icns
+	@test -d smokeProject.app/Contents/Resources/ || mkdir -p smokeProject.app/Contents/Resources/
+	@$(DEL_FILE) smokeProject.app/Contents/Resources/myIcon.icns
+	@$(COPY_FILE) ../smokeProject/myIcon.icns smokeProject.app/Contents/Resources/myIcon.icns
+smokeProject.app/Contents/MacOS/imagesFolder: ../smokeProject/imagesFolder
+	@test -d smokeProject.app/Contents/MacOS || mkdir -p smokeProject.app/Contents/MacOS
+	@$(DEL_FILE) -r smokeProject.app/Contents/MacOS/imagesFolder
+	@$(COPY_DIR) ../smokeProject/imagesFolder smokeProject.app/Contents/MacOS/imagesFolder
 
 all: Makefile \
 		smokeProject.app/Contents/PkgInfo \
 		smokeProject.app/Contents/Resources/empty.lproj \
-		smokeProject.app/Contents/Info.plist smokeProject.app/Contents/MacOS/smokeProject
+		smokeProject.app/Contents/Info.plist \
+		smokeProject.app/Contents/Resources/myIcon.icns \
+		smokeProject.app/Contents/MacOS/imagesFolder smokeProject.app/Contents/MacOS/smokeProject
 
 dist: distdir FORCE
 	(cd `dirname $(DISTDIR)` && $(TAR) $(DISTNAME).tar $(DISTNAME) && $(COMPRESS) $(DISTNAME).tar) && $(MOVE) `dirname $(DISTDIR)`/$(DISTNAME).tar.gz . && $(DEL_FILE) -r $(DISTDIR)
@@ -666,8 +700,8 @@ distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents /Users/theo/Qt/5.12.6/clang_64/mkspecs/features/data/dummy.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents ../smokeProject/BoxDisplayInfo.hh ../smokeProject/Civil.hh ../smokeProject/Clickablelabel.hh ../smokeProject/Grille.hh ../smokeProject/Milieu.hh ../smokeProject/Pompier.hh ../smokeProject/QListItemPersonnage.hh ../smokeProject/Recipient.hh ../smokeProject/Revetement.hh $(DISTDIR)/
-	$(COPY_FILE) --parents ../smokeProject/BoxDisplayInfo.cc ../smokeProject/Civil.cc ../smokeProject/Clickablelabel.cc ../smokeProject/Grille.cc ../smokeProject/Milieu.cc ../smokeProject/Pompier.cc ../smokeProject/QListItemPersonnage.cc ../smokeProject/main.cc $(DISTDIR)/
+	$(COPY_FILE) --parents ../smokeProject/BoxDisplayInfo.hh ../smokeProject/Civil.hh ../smokeProject/Clickablelabel.hh ../smokeProject/Grille.hh ../smokeProject/MessageBox.hh ../smokeProject/Milieu.hh ../smokeProject/Pompier.hh ../smokeProject/PompierEnChef.hh ../smokeProject/QListItemPersonnage.hh ../smokeProject/QListItemVehicule.hh ../smokeProject/Recipient.hh ../smokeProject/ReglesDuJeu.hh ../smokeProject/Revetement.hh ../smokeProject/Vehicule.hh $(DISTDIR)/
+	$(COPY_FILE) --parents ../smokeProject/BoxDisplayInfo.cc ../smokeProject/Civil.cc ../smokeProject/Clickablelabel.cc ../smokeProject/Grille.cc ../smokeProject/MessageBox.cc ../smokeProject/Milieu.cc ../smokeProject/Pompier.cc ../smokeProject/PompierEnChef.cc ../smokeProject/QListItemPersonnage.cc ../smokeProject/QListItemVehicule.cc ../smokeProject/ReglesDuJeu.cc ../smokeProject/Vehicule.cc ../smokeProject/main.cc $(DISTDIR)/
 
 
 clean: compiler_clean 
@@ -702,9 +736,9 @@ compiler_moc_predefs_clean:
 moc_predefs.h: /Users/theo/Qt/5.12.6/clang_64/mkspecs/features/data/dummy.cpp
 	/Library/Developer/CommandLineTools/usr/bin/clang++ -pipe -stdlib=libc++ -g -std=gnu++11 $(EXPORT_ARCH_ARGS) -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk -mmacosx-version-min=10.12 -Wall -W -dM -E -o moc_predefs.h /Users/theo/Qt/5.12.6/clang_64/mkspecs/features/data/dummy.cpp
 
-compiler_moc_header_make_all: moc_BoxDisplayInfo.cpp moc_Clickablelabel.cpp moc_Grille.cpp
+compiler_moc_header_make_all: moc_BoxDisplayInfo.cpp moc_Clickablelabel.cpp moc_Grille.cpp moc_MessageBox.cpp moc_ReglesDuJeu.cpp
 compiler_moc_header_clean:
-	-$(DEL_FILE) moc_BoxDisplayInfo.cpp moc_Clickablelabel.cpp moc_Grille.cpp
+	-$(DEL_FILE) moc_BoxDisplayInfo.cpp moc_Clickablelabel.cpp moc_Grille.cpp moc_MessageBox.cpp moc_ReglesDuJeu.cpp
 moc_BoxDisplayInfo.cpp: ../smokeProject/BoxDisplayInfo.hh \
 		/Users/theo/Qt/5.12.6/clang_64/lib/QtWidgets.framework/Headers/QDialog \
 		/Users/theo/Qt/5.12.6/clang_64/lib/QtWidgets.framework/Headers/qdialog.h \
@@ -737,6 +771,9 @@ moc_Grille.cpp: ../smokeProject/Grille.hh \
 		../smokeProject/Milieu.hh \
 		../smokeProject/Revetement.hh \
 		../smokeProject/Civil.hh \
+		../smokeProject/Vehicule.hh \
+		../smokeProject/Pompier.hh \
+		../smokeProject/Recipient.hh \
 		/Users/theo/Qt/5.12.6/clang_64/lib/QtWidgets.framework/Headers/QWidget \
 		/Users/theo/Qt/5.12.6/clang_64/lib/QtWidgets.framework/Headers/qwidget.h \
 		/Users/theo/Qt/5.12.6/clang_64/lib/QtWidgets.framework/Headers/QApplication \
@@ -758,13 +795,53 @@ moc_Grille.cpp: ../smokeProject/Grille.hh \
 		/Users/theo/Qt/5.12.6/clang_64/lib/QtWidgets.framework/Headers/QListWidget \
 		/Users/theo/Qt/5.12.6/clang_64/lib/QtWidgets.framework/Headers/qlistwidget.h \
 		/Users/theo/Qt/5.12.6/clang_64/lib/QtGui.framework/Headers/QCloseEvent \
-		../smokeProject/Pompier.hh \
-		../smokeProject/Recipient.hh \
 		../smokeProject/QListItemPersonnage.hh \
 		/Users/theo/Qt/5.12.6/clang_64/lib/QtWidgets.framework/Headers/QListWidgetItem \
+		../smokeProject/QListItemVehicule.hh \
+		../smokeProject/PompierEnChef.hh \
+		../smokeProject/MessageBox.hh \
+		/Users/theo/Qt/5.12.6/clang_64/lib/QtWidgets.framework/Headers/QHBoxLayout \
+		../smokeProject/ReglesDuJeu.hh \
+		/Users/theo/Qt/5.12.6/clang_64/lib/QtGui.framework/Headers/QFont \
+		/Users/theo/Qt/5.12.6/clang_64/lib/QtGui.framework/Headers/qfont.h \
+		/Users/theo/Qt/5.12.6/clang_64/lib/QtWidgets.framework/Headers/QDesktopWidget \
+		/Users/theo/Qt/5.12.6/clang_64/lib/QtWidgets.framework/Headers/qdesktopwidget.h \
 		moc_predefs.h \
 		/Users/theo/Qt/5.12.6/clang_64/bin/moc
 	/Users/theo/Qt/5.12.6/clang_64/bin/moc $(DEFINES) --include '/Users/theo/Documents/Polytech/EISE 4/C++/Projet/build-smokeProject-Desktop_Qt_5_12_6_clang_64bit-Debug/moc_predefs.h' -I/Users/theo/Qt/5.12.6/clang_64/mkspecs/macx-clang -I'/Users/theo/Documents/Polytech/EISE 4/C++/Projet/smokeProject' -I/Users/theo/Qt/5.12.6/clang_64/lib/QtWidgets.framework/Headers -I/Users/theo/Qt/5.12.6/clang_64/lib/QtGui.framework/Headers -I/Users/theo/Qt/5.12.6/clang_64/lib/QtCore.framework/Headers -I. -I/Library/Developer/CommandLineTools/usr/include/c++/v1 -I/Library/Developer/CommandLineTools/usr/lib/clang/11.0.0/include -I/Library/Developer/CommandLineTools/usr/include -I/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include -F/Users/theo/Qt/5.12.6/clang_64/lib ../smokeProject/Grille.hh -o moc_Grille.cpp
+
+moc_MessageBox.cpp: ../smokeProject/MessageBox.hh \
+		/Users/theo/Qt/5.12.6/clang_64/lib/QtWidgets.framework/Headers/QDialog \
+		/Users/theo/Qt/5.12.6/clang_64/lib/QtWidgets.framework/Headers/qdialog.h \
+		/Users/theo/Qt/5.12.6/clang_64/lib/QtWidgets.framework/Headers/QLabel \
+		/Users/theo/Qt/5.12.6/clang_64/lib/QtWidgets.framework/Headers/qlabel.h \
+		/Users/theo/Qt/5.12.6/clang_64/lib/QtWidgets.framework/Headers/QHBoxLayout \
+		/Users/theo/Qt/5.12.6/clang_64/lib/QtWidgets.framework/Headers/qboxlayout.h \
+		/Users/theo/Qt/5.12.6/clang_64/lib/QtWidgets.framework/Headers/QPushButton \
+		/Users/theo/Qt/5.12.6/clang_64/lib/QtWidgets.framework/Headers/qpushbutton.h \
+		moc_predefs.h \
+		/Users/theo/Qt/5.12.6/clang_64/bin/moc
+	/Users/theo/Qt/5.12.6/clang_64/bin/moc $(DEFINES) --include '/Users/theo/Documents/Polytech/EISE 4/C++/Projet/build-smokeProject-Desktop_Qt_5_12_6_clang_64bit-Debug/moc_predefs.h' -I/Users/theo/Qt/5.12.6/clang_64/mkspecs/macx-clang -I'/Users/theo/Documents/Polytech/EISE 4/C++/Projet/smokeProject' -I/Users/theo/Qt/5.12.6/clang_64/lib/QtWidgets.framework/Headers -I/Users/theo/Qt/5.12.6/clang_64/lib/QtGui.framework/Headers -I/Users/theo/Qt/5.12.6/clang_64/lib/QtCore.framework/Headers -I. -I/Library/Developer/CommandLineTools/usr/include/c++/v1 -I/Library/Developer/CommandLineTools/usr/lib/clang/11.0.0/include -I/Library/Developer/CommandLineTools/usr/include -I/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include -F/Users/theo/Qt/5.12.6/clang_64/lib ../smokeProject/MessageBox.hh -o moc_MessageBox.cpp
+
+moc_ReglesDuJeu.cpp: ../smokeProject/ReglesDuJeu.hh \
+		/Users/theo/Qt/5.12.6/clang_64/lib/QtWidgets.framework/Headers/QLabel \
+		/Users/theo/Qt/5.12.6/clang_64/lib/QtWidgets.framework/Headers/qlabel.h \
+		/Users/theo/Qt/5.12.6/clang_64/lib/QtWidgets.framework/Headers/QPushButton \
+		/Users/theo/Qt/5.12.6/clang_64/lib/QtWidgets.framework/Headers/qpushbutton.h \
+		/Users/theo/Qt/5.12.6/clang_64/lib/QtWidgets.framework/Headers/QVBoxLayout \
+		/Users/theo/Qt/5.12.6/clang_64/lib/QtWidgets.framework/Headers/qboxlayout.h \
+		/Users/theo/Qt/5.12.6/clang_64/lib/QtWidgets.framework/Headers/QHBoxLayout \
+		/Users/theo/Qt/5.12.6/clang_64/lib/QtGui.framework/Headers/QFont \
+		/Users/theo/Qt/5.12.6/clang_64/lib/QtGui.framework/Headers/qfont.h \
+		/Users/theo/Qt/5.12.6/clang_64/lib/QtWidgets.framework/Headers/QApplication \
+		/Users/theo/Qt/5.12.6/clang_64/lib/QtWidgets.framework/Headers/qapplication.h \
+		/Users/theo/Qt/5.12.6/clang_64/lib/QtWidgets.framework/Headers/QDesktopWidget \
+		/Users/theo/Qt/5.12.6/clang_64/lib/QtWidgets.framework/Headers/qdesktopwidget.h \
+		/Users/theo/Qt/5.12.6/clang_64/lib/QtWidgets.framework/Headers/QDialog \
+		/Users/theo/Qt/5.12.6/clang_64/lib/QtWidgets.framework/Headers/qdialog.h \
+		moc_predefs.h \
+		/Users/theo/Qt/5.12.6/clang_64/bin/moc
+	/Users/theo/Qt/5.12.6/clang_64/bin/moc $(DEFINES) --include '/Users/theo/Documents/Polytech/EISE 4/C++/Projet/build-smokeProject-Desktop_Qt_5_12_6_clang_64bit-Debug/moc_predefs.h' -I/Users/theo/Qt/5.12.6/clang_64/mkspecs/macx-clang -I'/Users/theo/Documents/Polytech/EISE 4/C++/Projet/smokeProject' -I/Users/theo/Qt/5.12.6/clang_64/lib/QtWidgets.framework/Headers -I/Users/theo/Qt/5.12.6/clang_64/lib/QtGui.framework/Headers -I/Users/theo/Qt/5.12.6/clang_64/lib/QtCore.framework/Headers -I. -I/Library/Developer/CommandLineTools/usr/include/c++/v1 -I/Library/Developer/CommandLineTools/usr/lib/clang/11.0.0/include -I/Library/Developer/CommandLineTools/usr/include -I/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include -F/Users/theo/Qt/5.12.6/clang_64/lib ../smokeProject/ReglesDuJeu.hh -o moc_ReglesDuJeu.cpp
 
 compiler_moc_objc_header_make_all:
 compiler_moc_objc_header_clean:
@@ -815,6 +892,9 @@ Grille.o: ../smokeProject/Grille.cc ../smokeProject/Grille.hh \
 		../smokeProject/Milieu.hh \
 		../smokeProject/Revetement.hh \
 		../smokeProject/Civil.hh \
+		../smokeProject/Vehicule.hh \
+		../smokeProject/Pompier.hh \
+		../smokeProject/Recipient.hh \
 		/Users/theo/Qt/5.12.6/clang_64/lib/QtWidgets.framework/Headers/QWidget \
 		/Users/theo/Qt/5.12.6/clang_64/lib/QtWidgets.framework/Headers/qwidget.h \
 		/Users/theo/Qt/5.12.6/clang_64/lib/QtWidgets.framework/Headers/QApplication \
@@ -836,15 +916,36 @@ Grille.o: ../smokeProject/Grille.cc ../smokeProject/Grille.hh \
 		/Users/theo/Qt/5.12.6/clang_64/lib/QtWidgets.framework/Headers/QListWidget \
 		/Users/theo/Qt/5.12.6/clang_64/lib/QtWidgets.framework/Headers/qlistwidget.h \
 		/Users/theo/Qt/5.12.6/clang_64/lib/QtGui.framework/Headers/QCloseEvent \
-		../smokeProject/Pompier.hh \
-		../smokeProject/Recipient.hh \
 		../smokeProject/QListItemPersonnage.hh \
-		/Users/theo/Qt/5.12.6/clang_64/lib/QtWidgets.framework/Headers/QListWidgetItem
+		/Users/theo/Qt/5.12.6/clang_64/lib/QtWidgets.framework/Headers/QListWidgetItem \
+		../smokeProject/QListItemVehicule.hh \
+		../smokeProject/PompierEnChef.hh \
+		../smokeProject/MessageBox.hh \
+		/Users/theo/Qt/5.12.6/clang_64/lib/QtWidgets.framework/Headers/QHBoxLayout \
+		../smokeProject/ReglesDuJeu.hh \
+		/Users/theo/Qt/5.12.6/clang_64/lib/QtGui.framework/Headers/QFont \
+		/Users/theo/Qt/5.12.6/clang_64/lib/QtGui.framework/Headers/qfont.h \
+		/Users/theo/Qt/5.12.6/clang_64/lib/QtWidgets.framework/Headers/QDesktopWidget \
+		/Users/theo/Qt/5.12.6/clang_64/lib/QtWidgets.framework/Headers/qdesktopwidget.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o Grille.o ../smokeProject/Grille.cc
+
+MessageBox.o: ../smokeProject/MessageBox.cc ../smokeProject/MessageBox.hh \
+		/Users/theo/Qt/5.12.6/clang_64/lib/QtWidgets.framework/Headers/QDialog \
+		/Users/theo/Qt/5.12.6/clang_64/lib/QtWidgets.framework/Headers/qdialog.h \
+		/Users/theo/Qt/5.12.6/clang_64/lib/QtWidgets.framework/Headers/QLabel \
+		/Users/theo/Qt/5.12.6/clang_64/lib/QtWidgets.framework/Headers/qlabel.h \
+		/Users/theo/Qt/5.12.6/clang_64/lib/QtWidgets.framework/Headers/QHBoxLayout \
+		/Users/theo/Qt/5.12.6/clang_64/lib/QtWidgets.framework/Headers/qboxlayout.h \
+		/Users/theo/Qt/5.12.6/clang_64/lib/QtWidgets.framework/Headers/QPushButton \
+		/Users/theo/Qt/5.12.6/clang_64/lib/QtWidgets.framework/Headers/qpushbutton.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o MessageBox.o ../smokeProject/MessageBox.cc
 
 Milieu.o: ../smokeProject/Milieu.cc ../smokeProject/Milieu.hh \
 		../smokeProject/Revetement.hh \
-		../smokeProject/Civil.hh
+		../smokeProject/Civil.hh \
+		../smokeProject/Vehicule.hh \
+		../smokeProject/Pompier.hh \
+		../smokeProject/Recipient.hh
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o Milieu.o ../smokeProject/Milieu.cc
 
 Pompier.o: ../smokeProject/Pompier.cc ../smokeProject/Pompier.hh \
@@ -852,11 +953,50 @@ Pompier.o: ../smokeProject/Pompier.cc ../smokeProject/Pompier.hh \
 		../smokeProject/Recipient.hh
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o Pompier.o ../smokeProject/Pompier.cc
 
+PompierEnChef.o: ../smokeProject/PompierEnChef.cc ../smokeProject/PompierEnChef.hh \
+		../smokeProject/Pompier.hh \
+		../smokeProject/Civil.hh \
+		../smokeProject/Recipient.hh
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o PompierEnChef.o ../smokeProject/PompierEnChef.cc
+
 QListItemPersonnage.o: ../smokeProject/QListItemPersonnage.cc ../smokeProject/QListItemPersonnage.hh \
 		/Users/theo/Qt/5.12.6/clang_64/lib/QtWidgets.framework/Headers/QListWidgetItem \
 		/Users/theo/Qt/5.12.6/clang_64/lib/QtWidgets.framework/Headers/qlistwidget.h \
 		../smokeProject/Civil.hh
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o QListItemPersonnage.o ../smokeProject/QListItemPersonnage.cc
+
+QListItemVehicule.o: ../smokeProject/QListItemVehicule.cc ../smokeProject/QListItemVehicule.hh \
+		/Users/theo/Qt/5.12.6/clang_64/lib/QtWidgets.framework/Headers/QListWidgetItem \
+		/Users/theo/Qt/5.12.6/clang_64/lib/QtWidgets.framework/Headers/qlistwidget.h \
+		../smokeProject/Vehicule.hh \
+		../smokeProject/Pompier.hh \
+		../smokeProject/Civil.hh \
+		../smokeProject/Recipient.hh
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o QListItemVehicule.o ../smokeProject/QListItemVehicule.cc
+
+ReglesDuJeu.o: ../smokeProject/ReglesDuJeu.cc ../smokeProject/ReglesDuJeu.hh \
+		/Users/theo/Qt/5.12.6/clang_64/lib/QtWidgets.framework/Headers/QLabel \
+		/Users/theo/Qt/5.12.6/clang_64/lib/QtWidgets.framework/Headers/qlabel.h \
+		/Users/theo/Qt/5.12.6/clang_64/lib/QtWidgets.framework/Headers/QPushButton \
+		/Users/theo/Qt/5.12.6/clang_64/lib/QtWidgets.framework/Headers/qpushbutton.h \
+		/Users/theo/Qt/5.12.6/clang_64/lib/QtWidgets.framework/Headers/QVBoxLayout \
+		/Users/theo/Qt/5.12.6/clang_64/lib/QtWidgets.framework/Headers/qboxlayout.h \
+		/Users/theo/Qt/5.12.6/clang_64/lib/QtWidgets.framework/Headers/QHBoxLayout \
+		/Users/theo/Qt/5.12.6/clang_64/lib/QtGui.framework/Headers/QFont \
+		/Users/theo/Qt/5.12.6/clang_64/lib/QtGui.framework/Headers/qfont.h \
+		/Users/theo/Qt/5.12.6/clang_64/lib/QtWidgets.framework/Headers/QApplication \
+		/Users/theo/Qt/5.12.6/clang_64/lib/QtWidgets.framework/Headers/qapplication.h \
+		/Users/theo/Qt/5.12.6/clang_64/lib/QtWidgets.framework/Headers/QDesktopWidget \
+		/Users/theo/Qt/5.12.6/clang_64/lib/QtWidgets.framework/Headers/qdesktopwidget.h \
+		/Users/theo/Qt/5.12.6/clang_64/lib/QtWidgets.framework/Headers/QDialog \
+		/Users/theo/Qt/5.12.6/clang_64/lib/QtWidgets.framework/Headers/qdialog.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ReglesDuJeu.o ../smokeProject/ReglesDuJeu.cc
+
+Vehicule.o: ../smokeProject/Vehicule.cc ../smokeProject/Vehicule.hh \
+		../smokeProject/Pompier.hh \
+		../smokeProject/Civil.hh \
+		../smokeProject/Recipient.hh
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o Vehicule.o ../smokeProject/Vehicule.cc
 
 main.o: ../smokeProject/main.cc /Users/theo/Qt/5.12.6/clang_64/lib/QtWidgets.framework/Headers/QApplication \
 		/Users/theo/Qt/5.12.6/clang_64/lib/QtWidgets.framework/Headers/qapplication.h \
@@ -864,6 +1004,9 @@ main.o: ../smokeProject/main.cc /Users/theo/Qt/5.12.6/clang_64/lib/QtWidgets.fra
 		../smokeProject/Milieu.hh \
 		../smokeProject/Revetement.hh \
 		../smokeProject/Civil.hh \
+		../smokeProject/Vehicule.hh \
+		../smokeProject/Pompier.hh \
+		../smokeProject/Recipient.hh \
 		/Users/theo/Qt/5.12.6/clang_64/lib/QtWidgets.framework/Headers/QWidget \
 		/Users/theo/Qt/5.12.6/clang_64/lib/QtWidgets.framework/Headers/qwidget.h \
 		/Users/theo/Qt/5.12.6/clang_64/lib/QtWidgets.framework/Headers/QPushButton \
@@ -883,10 +1026,17 @@ main.o: ../smokeProject/main.cc /Users/theo/Qt/5.12.6/clang_64/lib/QtWidgets.fra
 		/Users/theo/Qt/5.12.6/clang_64/lib/QtWidgets.framework/Headers/QListWidget \
 		/Users/theo/Qt/5.12.6/clang_64/lib/QtWidgets.framework/Headers/qlistwidget.h \
 		/Users/theo/Qt/5.12.6/clang_64/lib/QtGui.framework/Headers/QCloseEvent \
-		../smokeProject/Pompier.hh \
-		../smokeProject/Recipient.hh \
 		../smokeProject/QListItemPersonnage.hh \
-		/Users/theo/Qt/5.12.6/clang_64/lib/QtWidgets.framework/Headers/QListWidgetItem
+		/Users/theo/Qt/5.12.6/clang_64/lib/QtWidgets.framework/Headers/QListWidgetItem \
+		../smokeProject/QListItemVehicule.hh \
+		../smokeProject/PompierEnChef.hh \
+		../smokeProject/MessageBox.hh \
+		/Users/theo/Qt/5.12.6/clang_64/lib/QtWidgets.framework/Headers/QHBoxLayout \
+		../smokeProject/ReglesDuJeu.hh \
+		/Users/theo/Qt/5.12.6/clang_64/lib/QtGui.framework/Headers/QFont \
+		/Users/theo/Qt/5.12.6/clang_64/lib/QtGui.framework/Headers/qfont.h \
+		/Users/theo/Qt/5.12.6/clang_64/lib/QtWidgets.framework/Headers/QDesktopWidget \
+		/Users/theo/Qt/5.12.6/clang_64/lib/QtWidgets.framework/Headers/qdesktopwidget.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o main.o ../smokeProject/main.cc
 
 moc_BoxDisplayInfo.o: moc_BoxDisplayInfo.cpp 
@@ -897,6 +1047,12 @@ moc_Clickablelabel.o: moc_Clickablelabel.cpp
 
 moc_Grille.o: moc_Grille.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_Grille.o moc_Grille.cpp
+
+moc_MessageBox.o: moc_MessageBox.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_MessageBox.o moc_MessageBox.cpp
+
+moc_ReglesDuJeu.o: moc_ReglesDuJeu.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_ReglesDuJeu.o moc_ReglesDuJeu.cpp
 
 ####### Install
 

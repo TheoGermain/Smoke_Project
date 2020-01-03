@@ -11,7 +11,7 @@ class BoxDisplayInfo : public QDialog{
 
 public:
     BoxDisplayInfo(QWidget *parent = nullptr);
-    virtual ~BoxDisplayInfo();
+    ~BoxDisplayInfo();
     void set_coordCase(std::string str);
     void set_revCase(std::string str);
     void set_statusCase(std::string str);
