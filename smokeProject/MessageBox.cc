@@ -1,15 +1,21 @@
 #include "MessageBox.hh"
 
 MessageBox::MessageBox(QWidget *parent):QDialog(parent){
-    setFixedSize(310, 200);
+    QFont font;
+    font.setPixelSize(13);
+    setFixedSize(350, 200);
     QVBoxLayout* layout = new QVBoxLayout();
     QHBoxLayout* layoutBoutons = new QHBoxLayout();
     _msgPrincipal = new QLabel(this);
     _msgSecondaire = new QLabel(this);
+    _msgPrincipal->setFont(font);
+    _msgSecondaire->setFont(font);
     layout->addWidget(_msgPrincipal);
     layout->addWidget(_msgSecondaire);
     _rejouer = new QPushButton("REJOUER");
     _quitter = new QPushButton("QUITTER");
+    _rejouer->setFont(font);
+    _quitter->setFont(font);
     layoutBoutons->addWidget(_rejouer);
     layoutBoutons->addWidget(_quitter);
     layout->addLayout(layoutBoutons);

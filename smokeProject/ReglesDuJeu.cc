@@ -58,18 +58,25 @@ void ReglesDuJeu::changeState(){
 
 void ReglesDuJeu::displayStateZero(void){
     clearLayout(_bodyLayout);
+    QFont font;
+    font.setPointSize(13);
     QLabel *body = new QLabel("Avant de commencer la partie, voici les règles du jeu");
+    body->setFont(font);
     _bodyLayout->addWidget(body);
     _titre->setText("BIENVENU");
 }
 
 void ReglesDuJeu::displayStateOne(void){
+    QFont font;
+    font.setPointSize(13);
     _titre->setText("PRINCIPE (1/6)");
     clearLayout(_bodyLayout);
     std::stringstream ss;
     ss << "Le but du jeu est d'éteindre toutes les cases en feu, en sauvant un maximum de civils" << std::endl
      << "Si tous les pompiers ou civils meurent, ou si toutes les cases qui ne sont pas en feu sont brulées, vous perdez la partie..." << std::endl;
     QLabel *body = new QLabel(QString::fromStdString(ss.str()));
+    body->setFont(font);
+
 
     // Images
     QLabel *civil = new QLabel;
@@ -85,8 +92,11 @@ void ReglesDuJeu::displayStateOne(void){
 
     // Texts
     QLabel *civilText = new QLabel("Civils");
+    civilText->setFont(font);
     QLabel *pompierText = new QLabel("Pompiers");
+    pompierText->setFont(font);
     QLabel *pompierEnChefText = new QLabel("Pompiers en Chef");
+    pompierEnChefText->setFont(font);
     QHBoxLayout *txtLayout = new QHBoxLayout;
     txtLayout->addWidget(civilText);
     txtLayout->addWidget(pompierText);
@@ -99,6 +109,7 @@ void ReglesDuJeu::displayStateOne(void){
        << std::endl << std::endl << "Les pompiers en chef : sont déplaçables par le joueur, possèdent une puissante lance aux munitions illimitées pour éteindre le feu, peuvent conduire tous les véhicules."
        << std::endl << std::endl << "Les pompiers et pompiers en chef possèdent respectivement 2 et 4 PV, ils en perdent 1 au contact du feu et meurent si ce nombre atteint 0." << std::endl;
     body2->setText(QString::fromStdString(ss2.str()));
+    body2->setFont(font);
 
     _bodyLayout->addWidget(body);
     _bodyLayout->addLayout(imgLayout);
@@ -108,9 +119,12 @@ void ReglesDuJeu::displayStateOne(void){
 }
 
 void ReglesDuJeu::displayStateTwo(void){
+    QFont font;
+    font.setPointSize(13);
     _titre->setText("LES CASES (2/6)");
     clearLayout(_bodyLayout);
     QLabel *body1 = new QLabel("Voici les différents milieux :\n\n");
+    body1->setFont(font);
 
     QHBoxLayout *imgLayout = new QHBoxLayout;
     QLabel *foret = new QLabel;
@@ -137,18 +151,25 @@ void ReglesDuJeu::displayStateTwo(void){
 
     QHBoxLayout *txtLayout = new QHBoxLayout;
     QLabel *foretTxt = new QLabel("foret");
+    foretTxt->setFont(font);
     txtLayout->addWidget(foretTxt);
     QLabel *plaineTxt = new QLabel("plaine");
+    plaineTxt->setFont(font);
     txtLayout->addWidget(plaineTxt);
     QLabel *villeTxt = new QLabel("ville");
+    villeTxt->setFont(font);
     txtLayout->addWidget(villeTxt);
     QLabel *usineTxt = new QLabel("usine");
+    usineTxt->setFont(font);
     txtLayout->addWidget(usineTxt);
     QLabel *eauTxt = new QLabel("eau");
+    eauTxt->setFont(font);
     txtLayout->addWidget(eauTxt);
     QLabel *feuTxt = new QLabel("feu");
+    feuTxt->setFont(font);
     txtLayout->addWidget(feuTxt);
     QLabel *bruleTxt = new QLabel("brulé (cendre)");
+    bruleTxt->setFont(font);
     txtLayout->addWidget(bruleTxt);
 
     QLabel *body2 = new QLabel;
@@ -159,6 +180,7 @@ void ReglesDuJeu::displayStateTwo(void){
        << std::endl << std::endl << "Exemple : Pour une case de type foret, le feu aura une intensité de 6, et pourra se propager à chaque tour jusqu'à 2 cases autour." << std::endl;
 
     body2->setText(QString::fromStdString(ss.str()));
+    body2->setFont(font);
     _bodyLayout->addWidget(body1);
     _bodyLayout->addLayout(imgLayout);
     _bodyLayout->addLayout(txtLayout);
@@ -166,9 +188,12 @@ void ReglesDuJeu::displayStateTwo(void){
 }
 
 void ReglesDuJeu::displayStateThree(void){
+    QFont font;
+    font.setPointSize(13);
     _titre->setText("LES INFORMATIONS DE CASES (3/6)");
     clearLayout(_bodyLayout);
     QLabel *body1 = new QLabel("Lors d'un clique sur une case, les informations suivantes apparaissent :\n\n");
+    body1->setFont(font);
     QLabel *infoCase = new QLabel;
     infoCase->setPixmap(QPixmap(QApplication::applicationDirPath() + "/imagesFolder/info_case.png"));
     QLabel *body2 = new QLabel;
@@ -177,15 +202,19 @@ void ReglesDuJeu::displayStateThree(void){
        << std::endl << "Pour un Pompier ou Pompier en Chef, les information correspondent (de gauche à droite) à :"
        << std::endl << "Le nom, le nombre de point de vie, le nombre de 'munitions' restantes, et la puissance d'exctinction (voir après)." << std::endl;
     body2->setText(QString::fromStdString(ss.str()));
+    body2->setFont(font);
     _bodyLayout->addWidget(body1);
     _bodyLayout->addWidget(infoCase);
     _bodyLayout->addWidget(body2);
 }
 
 void ReglesDuJeu::displayStateFour(void){
+    QFont font;
+    font.setPointSize(13);
     _titre->setText("LES ACTIONS (4/6)");
     clearLayout(_bodyLayout);
     QLabel* body1 = new QLabel("Lors d'un clique sur un pompier ou un pompier en chef dans la liste d'une case, plusieurs actions sont possibles.\nLe personnage devient gris s'il à effectué toutes les actions qu'il pouvait faire pendant ce tour.\nChaque tour les personnages peuvent arroser un feu et au choix se déplacer ou monter dans un véhicule.\n");
+    body1->setFont(font);
 
     QHBoxLayout *imgLayout = new QHBoxLayout;
     QLabel *deplacement = new QLabel;
@@ -207,6 +236,7 @@ void ReglesDuJeu::displayStateFour(void){
        << std::endl << "avec des cases bleues." << std::endl << "Il suffit alors de cliquer sur une de ces"
        << std::endl << "cases pour déplacer le personnage." << std::endl << "Un seul déplacement est autorisé" << std::endl << "par tour.";
     QLabel* txtDeplacement = new QLabel(QString::fromStdString(ss.str()));
+    txtDeplacement->setFont(font);
     txtLayout->addWidget(txtDeplacement);
     ss.clear();
     ss.str(std::string());
@@ -216,11 +246,13 @@ void ReglesDuJeu::displayStateFour(void){
        << std::endl << "(Seau : 4, Extincteur : 5, Lance : 6)."
        << std::endl << std::endl << "Arroser une case arrose aussi les cases" << std::endl << "adjacentes (en croix)." << std::endl;
     QLabel* txtArroser = new QLabel(QString::fromStdString(ss.str()));
+    txtArroser->setFont(font);
     txtLayout->addWidget(txtArroser);
     ss.clear();
     ss.str(std::string());
     ss << "En plus du bouton arroser, un bouton 'Monter dans un véhicule' s'affiche en bas de l'écran." << std::endl << "Lorsque l'on clique sur ce bouton, les cases de portée deviennent rouge (photo ci-dessus)" << std::endl << "afin d'avertir le joueur qu'il peut maintenant cliquer sur un véhicule à sa portée pour" << std::endl << "embarquer dans ce-dernier.";
     QLabel* txtMonterVehicule = new QLabel(QString::fromStdString(ss.str()));
+    txtMonterVehicule->setFont(font);
     txtLayout->addWidget(txtMonterVehicule);
 
     _bodyLayout->addWidget(body1);
@@ -229,9 +261,12 @@ void ReglesDuJeu::displayStateFour(void){
 }
 
 void ReglesDuJeu::displayStateFive(void){
+    QFont font;
+    font.setPointSize(13);
     _titre->setText("LES VEHICULES (5/6)");
     clearLayout(_bodyLayout);
     QLabel* body1 = new QLabel("3 Véhicules sont disponibles, 2 mobylettes et 1 camion :\n");
+    body1->setFont(font);
     _bodyLayout->addWidget(body1);
 
     QHBoxLayout* imgLayout = new QHBoxLayout;
@@ -251,21 +286,24 @@ void ReglesDuJeu::displayStateFive(void){
     QHBoxLayout* txtLayout = new QHBoxLayout;
     std::stringstream ss;
     ss << "Les mobylettes permettent de se" << std::endl << "déplacer plus rapidemment" << std::endl << "(jusqu'à 7 cases)." << std::endl << "Elles peuvent embarquer jusqu'à" << std::endl << "deux personnages."
-       << std::endl << "Pour pouvoir la conduire il faut" << std::endl << "qu'au moins un des passagers" << std::endl << "ne soit pas grisé" << std::endl << "(1 perosnnage ne peut donc" << std::endl << "pas conduire une mobylette le" << std::endl << "tour où il monte sur cette-dernière)." << std::endl;
+       << std::endl << "Pour pouvoir la conduire il faut" << std::endl << "qu'au moins un des passagers" << std::endl << "ne soit pas grisé" << std::endl << "(1 personnage ne peut donc" << std::endl << "pas conduire une mobylette le" << std::endl << "tour où il monte sur cette-dernière)." << std::endl;
     QLabel *mobyletteTxt = new QLabel(QString::fromStdString(ss.str()));
+    mobyletteTxt->setFont(font);
     txtLayout->addWidget(mobyletteTxt);
     ss.clear();
     ss.str(std::string());
     ss << "Le camion peut se déplacer encore plus" << std::endl << "rapidement (jusqu'à 12 cases)." << std::endl << "Il peut embarqué jusqu'à 6 passagers."
        << std::endl << "Pour pouvoir le conduire il faut qu'au" << std::endl << "moins" << std::endl << "un passager soit un Pompier en Chef."
-       << std::endl << "Un comion peut être conduit dès le" << std::endl <<  "tour où le pompier en chef embarque." << std::endl;
+       << std::endl << "Un camion peut être conduit dès le" << std::endl <<  "tour où le pompier en chef embarque." << std::endl;
     QLabel *camionTxt = new QLabel(QString::fromStdString(ss.str()));
+    camionTxt->setFont(font);
     txtLayout->addWidget(camionTxt);
     ss.clear();
     ss.str(std::string());
     ss << "Lorsque des personnages sont dans un véhicule, ils s'affichent en italique (image ci-dessus)." << std::endl << "Pour déplacer un véhicule, il faut alors le sélectionner dans la liste," << std::endl << "et si les conditions précedentes sont remplies," << std::endl <<  "un bouton CONDUIRE apparaîtra en bas de l'écran."
        << std::endl << "Appuyer sur ce bouton affichera la portée du véhicule," << std::endl << "il suffit alors de cliquer sur une case pour le déplacer." << std::endl;
     QLabel *selectionVehiculeTxt = new QLabel(QString::fromStdString(ss.str()));
+    selectionVehiculeTxt->setFont(font);
     txtLayout->addWidget(selectionVehiculeTxt);
 
     _bodyLayout->addWidget(body1);
@@ -274,15 +312,18 @@ void ReglesDuJeu::displayStateFive(void){
 }
 
 void ReglesDuJeu::displayStateSix(void){
+    QFont font;
+    font.setPointSize(13);
     _titre->setText("LE RECHARGEMENT (6/6)");
     clearLayout(_bodyLayout);
     std::stringstream ss;
     ss << "Lorsque les 'munitions' du récipient d'un personnage est vide, il faut le remplir pour pouvoir arroser de nouveau."
-       << std::endl << "Pour cela, les pompiers possédant un seau doivent se trouver à coté d'une case remplie d'eau, "
-       << std::endl << "ceux possédants des extincteurs doivent se trouver à coté d'un véhicule."
+       << std::endl << "Pour cela, les pompiers possédant un seau doivent se trouver à côté d'une case remplie d'eau, "
+       << std::endl << "ceux possédant des extincteurs doivent se trouver à côté d'un véhicule."
        << std::endl << "Un bouton REMPLIR apparaît alors en bas de l'écran, appuyer dessus remplira le contenant."
-       << std::endl << "Il est possible de remplir le contenant même si ce-dernier n'est pas vide." << std::endl;
+       << std::endl << "Il est possible de remplir le contenant même si ce dernier n'est pas vide." << std::endl;
     QLabel* body = new QLabel(QString::fromStdString(ss.str()));
+    body->setFont(font);
     _bodyLayout->addWidget(body);
 }
 

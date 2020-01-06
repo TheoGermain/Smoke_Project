@@ -5,6 +5,8 @@
 #include <Qt>
 #include <QMouseEvent>
 
+#define PIX_CASE 35
+
 class ClickableLabel : public QLabel {
     Q_OBJECT
 

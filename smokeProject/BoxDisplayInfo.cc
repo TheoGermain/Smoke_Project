@@ -1,13 +1,21 @@
 #include "BoxDisplayInfo.hh"
 
 BoxDisplayInfo::BoxDisplayInfo(QWidget *parent) : QDialog(parent){
+    QFont font;
+    font.setPointSize(13);
+    setFixedSize(300, 300);
     _layout = new QVBoxLayout;
     _coordCase = new QLabel;
+    _coordCase->setFont(font);
     _revCase = new QLabel;
+    _revCase->setFont(font);
     _statusCase = new QLabel;
+    _statusCase->setFont(font);
     _intensiteFeuCase = new QLabel;
+    _intensiteFeuCase->setFont(font);
     _list = new QListWidget();
     QLabel *_contenu = new QLabel("Contenu de la case :");
+    _contenu->setFont(font);
     _layout->addWidget(_coordCase);
     _layout->addWidget(_revCase);
     _layout->addWidget(_statusCase);

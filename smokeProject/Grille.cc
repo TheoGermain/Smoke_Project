@@ -82,7 +82,6 @@ Grille::Grille() : _imgFeu(L_GRILLE, std::vector<ClickableLabel*>()), _imgAction
 
   // Fenetre pour l'affichage des informations d'une case
   _fenetreInfoCase = new BoxDisplayInfo(this);
-  _fenetreInfoCase->setFixedSize(270, 300);
 
   // Affichages règles du jeu
   _regles = new ReglesDuJeu(this);
@@ -253,7 +252,6 @@ void Grille::boxClicked(int L, int C){
     p = static_cast<Pompier*>(currentlySelected.first);
     if(flag_conduire){
         conduire(L,C);
-        cleanPossibilities();
     }
     else if(flag_deplacement){
         if(_imgAction[L][C]->isVisible()){
@@ -262,7 +260,6 @@ void Grille::boxClicked(int L, int C){
             _monterVehicule->setVisible(false);
             if(p != NULL)
                 p->set_deplacementEffectue(true);
-            cleanPossibilities();
         }
     }
     else if(flag_arroser){
@@ -276,7 +273,6 @@ void Grille::boxClicked(int L, int C){
             p->set_arrosageEffectue(true);
             p->set_deplacementEffectue(true);
         }
-        cleanPossibilities();
     }
     if(p != NULL && p->get_arrosageEffectue() && p->get_deplacementEffectue()){
         if(dynamic_cast<PompierEnChef*>(currentlySelected.first))
@@ -286,6 +282,8 @@ void Grille::boxClicked(int L, int C){
     }
     fillFenetreInfoCase(L,C);
     emit displayInfo();
+    cleanPossibilities();
+
 }
 
 void Grille::gameStart(){
@@ -377,14 +375,14 @@ void Grille::deplacer_personnage(std::vector<int> former_pos, int new_x, int new
     plateau[former_pos[1]][former_pos[0]].supprimerPersonnage(c->first);
     plateau[new_y][new_x].ajouterPersonnage(c->first);
     c->first->set_pos(new_x, new_y);
-    c->second->move(new_x*35, new_y*35);
+    c->second->move(new_x*PIX_CASE, new_y*PIX_CASE);
 }
 
 void Grille::deplacer_vehicule(std::vector<int> former_pos, int new_x, int new_y, std::pair<Vehicule*, ClickableLabel*> *c){
     plateau[former_pos[1]][former_pos[0]].supprimerVehicule(c->first);
     plateau[new_y][new_x].ajouterVehicule(c->first);
     c->first->set_pos(new_x, new_y);
-    c->second->move(new_x*35, new_y*35);
+    c->second->move(new_x*PIX_CASE, new_y*PIX_CASE);
 }
 
 void Grille::baisse_pdv(){
@@ -464,6 +462,7 @@ void Grille::cleanPossibilities(void){
     flag_deplacement = false;
     flag_monterVehicule = false;
     flag_conduire = false;
+    _conduire->setVisible(false);
     _arroser->setVisible(false);
     _monterVehicule->setVisible(false);
     _descendreVehicule->setVisible(false);
@@ -521,6 +520,8 @@ void Grille::remplirPressed(void){
 }
 
 void Grille::fillFenetreInfoCase(int L, int C){
+    QFont font;
+    font.setPointSize(13);
     if((C < C_GRILLE/2))
         _fenetreInfoCase->move(3*(_map->width()/4) - _fenetreInfoCase->width()/2, _map->height()/2 - _fenetreInfoCase->height()/2);
     else if(C >= C_GRILLE/2)
@@ -554,18 +555,19 @@ void Grille::fillFenetreInfoCase(int L, int C){
                     continue;
         }
         QListItemPersonnage *item = new QListItemPersonnage(*it, _fenetreInfoCase->get_list());
+        item->setFont(font);
         _fenetreInfoCase->addItem(item);
     }
     std::vector<Vehicule*> v_v = plateau[L][C].get_vehicules();
     for(std::vector<Vehicule*>::iterator it = v_v.begin(); it != v_v.end(); it++){
         QListItemVehicule *item = new QListItemVehicule(*it, _fenetreInfoCase->get_list());
+        item->setFont(font);
         _fenetreInfoCase->addItem(item);
         std::vector<Pompier*> v_p = (*it)->get_passagers();
         if(!v_p.empty())
         {
             for(std::vector<Pompier*>::iterator it2 = v_p.begin(); it2 != v_p.end(); it2++){
                 QListItemPersonnage *item_2 = new QListItemPersonnage(*it2, _fenetreInfoCase->get_list());
-                QFont font = item_2->font();
                 font.setItalic(true);
                 item_2->setFont(font);
                 _fenetreInfoCase->addItem(item_2);
@@ -596,7 +598,7 @@ void Grille::initCivils(void){
         }while(plateau[y_alea][x_alea].get_revetement() == NSRevetement::eau || plateau[y_alea][x_alea].get_en_feu());
         it->first->set_pos(x_alea, y_alea);
         plateau[y_alea][x_alea].ajouterPersonnage(it->first);
-        it->second->move(x_alea*35, y_alea*35);
+        it->second->move(x_alea*PIX_CASE, y_alea*PIX_CASE);
         it->second->setVisible(true);
     }
 }
@@ -611,63 +613,76 @@ void Grille::initPompiers(void){
         }while(plateau[y_alea][x_alea].get_revetement() == NSRevetement::eau || plateau[y_alea][x_alea].get_en_feu());
         it->first->set_pos(x_alea, y_alea);
         plateau[y_alea][x_alea].ajouterPersonnage(it->first);
-        it->second->move(x_alea*35, y_alea*35);
+        it->second->move(x_alea*PIX_CASE, y_alea*PIX_CASE);
         it->second->setVisible(true);
     }
 }
 
 void Grille::initVehicules(void){
-    _vehiculeList[0].second->move(23*35, 18*35);
+    _vehiculeList[0].second->move(23*PIX_CASE, 18*PIX_CASE);
     _vehiculeList[0].first->set_pos(23, 18);
     _vehiculeList[0].second->setVisible(true);
     plateau[18][23].ajouterVehicule(_vehiculeList[0].first);
-    _vehiculeList[1].second->move(24*35, 18*35);
+    _vehiculeList[1].second->move(24*PIX_CASE, 18*PIX_CASE);
     _vehiculeList[1].first->set_pos(24, 18);
     _vehiculeList[1].second->setVisible(true);
     plateau[18][24].ajouterVehicule(_vehiculeList[1].first);
-    _vehiculeList[2].second->move(22*35, 18*35);
+    _vehiculeList[2].second->move(22*PIX_CASE, 18*PIX_CASE);
     _vehiculeList[2].first->set_pos(22, 18);
     _vehiculeList[2].second->setVisible(true);
     plateau[18][22].ajouterVehicule(_vehiculeList[2].first);
 }
 
 void Grille::initBoutons(void){
+    QFont font;
+    font.setPointSize(13);
+
     // Bouton START
     _start = new QPushButton("START", this);
     _start->move(this->frameSize().width()/2 - _start->frameSize().width()/2, 780);
+    _start->setFont(font);
+
+    std::cout << _start->font().pointSize() << std::endl;
 
     // Bouton Afficher Règles
     _afficherRegles = new QPushButton("REGLES DU JEU", this);
     _afficherRegles->move(this->width()/2 - 2*_start->width(), 780);
+    _afficherRegles->setFont(font);
 
     // Bouton TOUR SUIVANT
     _nextTurn = new QPushButton("Tour Suivant", this);
     _nextTurn->move(this->frameSize().width()/2 - _nextTurn->frameSize().width()/2, 780);
+    _nextTurn->setFont(font);
     _nextTurn->setVisible(false);
 
     // Bouton ARROSER
     _arroser = new QPushButton("ARROSER", this);
     _arroser->move(this->frameSize().width()/4 - _arroser->frameSize().width()/2, 780);
+    _arroser->setFont(font);
     _arroser->setVisible(false);
 
     // Bouton MONTER VEHICULE
     _monterVehicule = new QPushButton("Monter dans un véhicule", this);
     _monterVehicule->move(this->frameSize().width()/2 - _monterVehicule->frameSize().width()/2, 780);
+    _monterVehicule->setFont(font);
     _monterVehicule->setVisible(false);
 
     // Bouton DESCENDRE VEHICULE
     _descendreVehicule = new QPushButton("Descendre du véhicule", this);
     _descendreVehicule->move(this->frameSize().width()/2 - _descendreVehicule->frameSize().width()/2, 780);
+    _descendreVehicule->setFont(font);
     _descendreVehicule->setVisible(false);
 
     // Bouton CONDUIRE
     _conduire = new QPushButton("CONDUIRE", this);
     _conduire->move(this->frameSize().width()/3 - _conduire->frameSize().width()/2, 780);
+    _conduire->setFont(font);
     _conduire->setVisible(false);
 
     // Bouton REMPLIR
     _remplir = new QPushButton("REMPLIR", this);
     _remplir->move(this->frameSize().width()/3 - _remplir->frameSize().width()/2, 780);
+    _remplir->setFont(font);
     _remplir->setVisible(false);
 }
 
@@ -677,7 +692,7 @@ void Grille::initSymboles(void){
         for(int k = 0; k < C_GRILLE; k++){
             ClickableLabel *imgFeu = new ClickableLabel(this);
             imgFeu->setPixmap(QPixmap(QApplication::applicationDirPath() + "/imagesFolder/feu.png"));
-            imgFeu->setGeometry(k*35, j*35, 35, 35);
+            imgFeu->setGeometry(k*PIX_CASE, j*PIX_CASE, PIX_CASE, PIX_CASE);
             imgFeu->setVisible(false);
             _imgFeu[j].push_back(imgFeu);
             QObject::connect(imgFeu, SIGNAL(clickedImg(int, int)), this, SLOT(boxClicked(int, int)));
@@ -689,7 +704,7 @@ void Grille::initSymboles(void){
         for(int k = 0; k < C_GRILLE; k++){
             ClickableLabel *imgAction = new ClickableLabel(this);
             imgAction->setPixmap(QPixmap(QApplication::applicationDirPath() + "/imagesFolder/action.png"));
-            imgAction->setGeometry(k*35, j*35, 35, 35);
+            imgAction->setGeometry(k*PIX_CASE, j*PIX_CASE, PIX_CASE, PIX_CASE);
             imgAction->setVisible(false);
             _imgAction[j].push_back(imgAction);
             QObject::connect(imgAction, SIGNAL(clickedImg(int, int)), this, SLOT(boxClicked(int, int)));
