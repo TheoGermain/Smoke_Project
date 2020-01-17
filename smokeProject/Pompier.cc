@@ -7,7 +7,9 @@ Pompier::Pompier(Recipient* recip, int pv, int pm) : Civil(0, 0, pv, pm), _recip
     Civil::cpt--;
 }
 
-Pompier::~Pompier(){}
+Pompier::~Pompier(){
+    delete _recip;
+}
 
 void Pompier::set_deplacementEffectue(bool b){
     _deplacementEffectue = b;

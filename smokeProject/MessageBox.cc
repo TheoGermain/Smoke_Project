@@ -2,8 +2,9 @@
 
 MessageBox::MessageBox(QWidget *parent):QDialog(parent){
     QFont font;
-    font.setPixelSize(13);
+    font.setPixelSize(14);
     setFixedSize(350, 200);
+    setWindowTitle("Message");
     QVBoxLayout* layout = new QVBoxLayout();
     QHBoxLayout* layoutBoutons = new QHBoxLayout();
     _msgPrincipal = new QLabel(this);
@@ -25,6 +26,10 @@ MessageBox::MessageBox(QWidget *parent):QDialog(parent){
 }
 
 MessageBox::~MessageBox(){
+    delete _msgPrincipal;
+    delete _msgSecondaire;
+    delete _rejouer;
+    delete _quitter;
 }
 
 void MessageBox::set_msgPrincipal(std::string str)

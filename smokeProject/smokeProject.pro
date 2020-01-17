@@ -6,6 +6,8 @@ mySetOfExtraFiles.files = $$PWD/imagesFolder
 mySetOfExtraFiles.path = Contents/MacOS
 QMAKE_BUNDLE_DATA += mySetOfExtraFiles
 
+QMAKE_CXXFLAGS += -std=c++0x
+
 HEADERS += \
     BoxDisplayInfo.hh \
     Civil.hh \

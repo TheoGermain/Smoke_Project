@@ -5,7 +5,9 @@ QListItemVehicule::QListItemVehicule(Vehicule *v, QListWidget *parent, int type)
 
 }
 
-QListItemVehicule::~QListItemVehicule(){}
+QListItemVehicule::~QListItemVehicule(){
+    delete _v;
+}
 
 Vehicule* QListItemVehicule::get_vehicule(void){
     return _v;

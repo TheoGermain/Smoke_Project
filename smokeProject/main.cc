@@ -31,7 +31,8 @@ int main(int argc, char *argv[])
     do{
         app = new QApplication(argc, argv);
         g = new Grille;
-        g->showFullScreen();
+        g->show();
+        g->setFixedSize(1400,850);
         app->exec();
         delete g;
         delete app;

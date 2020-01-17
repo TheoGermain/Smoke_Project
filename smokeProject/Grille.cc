@@ -19,7 +19,6 @@ Grille::Grille() : _imgFeu(L_GRILLE, std::vector<ClickableLabel*>()), _imgAction
   int pos_l = 0;
   int pos_c = 0;
   std::string path = QApplication::applicationDirPath().toUtf8().constData();
-  std::cout << path << std::endl;
   setFixedSize(1400, 820);
 
   // Afficher un message
@@ -82,6 +81,7 @@ Grille::Grille() : _imgFeu(L_GRILLE, std::vector<ClickableLabel*>()), _imgAction
 
   // Fenetre pour l'affichage des informations d'une case
   _fenetreInfoCase = new BoxDisplayInfo(this);
+  _fenetreInfoCase->setFixedSize(320, 300);
 
   // Affichages règles du jeu
   _regles = new ReglesDuJeu(this);
@@ -96,6 +96,43 @@ Grille::~Grille(){
   for(auto it = Grille::cases_en_feu.begin(); it != Grille::cases_en_feu.end(); it++){
       delete[] *it;
   }
+
+  for(auto it : _imgFeu){
+      for(auto it2 : it)
+          delete it2;
+  }
+  for(auto it : _imgAction){
+      for(auto it2 : it)
+          delete it2;
+  }
+  for(auto it : _civilList){
+      delete it.first;
+      delete it.second;
+  }
+  for(auto it : _pompierList){
+      delete it.first;
+      delete it.second;
+  }
+  for(auto it : _vehiculeList){
+      delete it.first;
+      delete it.second;
+  }
+
+  delete _map;
+  delete _start;
+  delete _nextTurn;
+  delete _arroser;
+  delete _monterVehicule;
+  delete _descendreVehicule;
+  delete _conduire;
+  delete _remplir;
+  delete _afficherRegles;
+  delete _nbCivil;
+  delete _nbFeu;
+  delete _nbPompier;
+  delete _fenetreInfoCase;
+  delete _msg;
+  delete _regles;
 }
 
 Milieu Grille::operator()(std::size_t L, std::size_t C) const{
@@ -283,7 +320,6 @@ void Grille::boxClicked(int L, int C){
     fillFenetreInfoCase(L,C);
     emit displayInfo();
     cleanPossibilities();
-
 }
 
 void Grille::gameStart(){
@@ -462,11 +498,11 @@ void Grille::cleanPossibilities(void){
     flag_deplacement = false;
     flag_monterVehicule = false;
     flag_conduire = false;
-    _conduire->setVisible(false);
     _arroser->setVisible(false);
     _monterVehicule->setVisible(false);
     _descendreVehicule->setVisible(false);
     _remplir->setVisible(false);
+    _conduire->setVisible(false);
     for(auto &it : _imgAction){
         for(auto &it2 : it){
             it2->setVisible(false);
@@ -521,7 +557,7 @@ void Grille::remplirPressed(void){
 
 void Grille::fillFenetreInfoCase(int L, int C){
     QFont font;
-    font.setPointSize(13);
+    font.setPixelSize(14);
     if((C < C_GRILLE/2))
         _fenetreInfoCase->move(3*(_map->width()/4) - _fenetreInfoCase->width()/2, _map->height()/2 - _fenetreInfoCase->height()/2);
     else if(C >= C_GRILLE/2)
@@ -635,14 +671,12 @@ void Grille::initVehicules(void){
 
 void Grille::initBoutons(void){
     QFont font;
-    font.setPointSize(13);
+    font.setPixelSize(14);
 
     // Bouton START
     _start = new QPushButton("START", this);
     _start->move(this->frameSize().width()/2 - _start->frameSize().width()/2, 780);
     _start->setFont(font);
-
-    std::cout << _start->font().pointSize() << std::endl;
 
     // Bouton Afficher Règles
     _afficherRegles = new QPushButton("REGLES DU JEU", this);
@@ -993,7 +1027,7 @@ void Grille::resizeRegle(int n){
             _regles->setFixedSize(400,200);
         break;
         case 1 :
-            _regles->setFixedSize(1070,450);
+            _regles->setFixedSize(1120,450);
         break;
         case 2 :
             _regles->setFixedSize(1070,450);
@@ -1005,7 +1039,7 @@ void Grille::resizeRegle(int n){
             _regles->setFixedSize(1200,700);
         break;
         case 5 :
-            _regles->setFixedSize(1070,700);
+            _regles->setFixedSize(1150,700);
         break;
         case 6 :
             _regles->setFixedSize(800,250);

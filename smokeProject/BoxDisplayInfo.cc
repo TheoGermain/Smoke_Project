@@ -2,8 +2,8 @@
 
 BoxDisplayInfo::BoxDisplayInfo(QWidget *parent) : QDialog(parent){
     QFont font;
-    font.setPointSize(13);
-    setFixedSize(300, 300);
+    font.setPixelSize(14);
+    setWindowTitle("Info Case");
     _layout = new QVBoxLayout;
     _coordCase = new QLabel;
     _coordCase->setFont(font);
@@ -25,7 +25,14 @@ BoxDisplayInfo::BoxDisplayInfo(QWidget *parent) : QDialog(parent){
     this->setLayout(_layout);
 }
 
-BoxDisplayInfo::~BoxDisplayInfo(){}
+BoxDisplayInfo::~BoxDisplayInfo(){
+    delete _layout;
+    delete _coordCase;
+    delete _revCase;
+    delete _statusCase;
+    delete _intensiteFeuCase;
+    delete _list;
+}
 
 void BoxDisplayInfo::set_coordCase(std::string str){
     _coordCase->setText(QString::fromStdString(str));

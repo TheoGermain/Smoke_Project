@@ -5,7 +5,9 @@ QListItemPersonnage::QListItemPersonnage(Civil*c, QListWidget *parent, int type)
 
 }
 
-QListItemPersonnage::~QListItemPersonnage(){}
+QListItemPersonnage::~QListItemPersonnage(){
+    delete _c;
+}
 
 Civil* QListItemPersonnage::get_civil(void){
     return _c;

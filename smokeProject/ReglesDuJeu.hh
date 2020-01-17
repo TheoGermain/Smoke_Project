@@ -36,5 +36,6 @@ private:
     QHBoxLayout* _buttonLayout;
     QPushButton* _suivant;
     QPushButton* _passer;
+    std::vector<QObject*> objets;
     int _state;
 };
